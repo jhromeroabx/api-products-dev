@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#!/bin/sh
+<# : batch portion
+# Licensed to the Apache Software Foundation (ASF) under one
