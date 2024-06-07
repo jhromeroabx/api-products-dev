@@ -31,7 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+mvnw
+mvnw.cmd
 
+
+.mvn/wrapper/maven-wrapper.properties
 #!/bin/sh
 <# : batch portion
 # Licensed to the Apache Software Foundation (ASF) under one
