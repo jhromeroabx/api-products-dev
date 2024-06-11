@@ -1,4 +1,4 @@
-package com.demo.apiproducts;
+package com.demo.approducts;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
