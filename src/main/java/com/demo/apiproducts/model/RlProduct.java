@@ -37,6 +37,6 @@ public class RlProduct {
     @ManyToOne()
     @JoinColumn(name = "id_rl_product_type", nullable = false)
     private RlProductType productType;
-    @OneToMany(mappedBy = "rl_product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<RlProductImage> productImages;
 }
