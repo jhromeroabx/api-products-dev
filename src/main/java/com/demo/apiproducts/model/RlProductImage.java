@@ -2,6 +2,7 @@ package com.demo.apiproducts.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,22 +17,18 @@ import java.util.Date;
 @Setter
 @Entity
 public class RlProductImage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_rl_product_image")
     private Long id;
-
     @Column(name = "provider")
     private String provider;
-
     @Column(name = "provider_link")
     private String providerLink;
-
     @Column(name = "deleted_at")
     private Date deletedAt;
-
-    @ManyToOne()
-    @JoinColumn(name = "id_rl_product")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_rl_product", nullable = false)
     private RlProduct product;
-
 }
