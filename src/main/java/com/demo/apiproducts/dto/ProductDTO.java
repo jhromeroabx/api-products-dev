@@ -23,7 +23,7 @@ public class ProductDTO {
       this.currency = product.getCurrency();
       this.price = product.getPrice();
       this.image = product.getProductImages().isEmpty() ? null : product.getProductImages().get(0).getProviderLink();
-      this.isFavorite = false; // Ajusta esta lógica según tus requisitos
+      this.isFavorite = false;
       this.description = product.getDescription();
    }
 }

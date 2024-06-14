@@ -18,6 +18,8 @@ create table rl_product
         primary key,
     name               varchar not null,
     description        varchar not null,
+    currency varchar not null,
+    price varchar not null,
     large_description  text not null,
     deleted_at         timestamp,
     id_rl_product_type integer not null
