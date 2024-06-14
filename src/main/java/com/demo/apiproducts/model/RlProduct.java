@@ -32,6 +32,10 @@ public class RlProduct {
     private String description;
     @Column(name = "large_description")
     private String largeDescription;
+    @Column(name = "currency")
+    private String currency;
+    @Column(name = "price")
+    private String price;
     @Column(name = "deleted_at")
     private Date deletedAt;
     @ManyToOne()
