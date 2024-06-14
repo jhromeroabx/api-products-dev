@@ -16,10 +16,6 @@ public class ProductDTO {
    private boolean isFavorite;
    private String description;
 
-
-
-   //private String largeDescription;
-
    public ProductDTO(RlProduct product) {
       this.idProduct = product.getId();
       this.name = product.getName();

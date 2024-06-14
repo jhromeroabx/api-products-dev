@@ -30,5 +30,4 @@ public class ProductSpecifications {
          return criteriaBuilder.isTrue(root.get("isFavorite"));
       };
    }
-
 }

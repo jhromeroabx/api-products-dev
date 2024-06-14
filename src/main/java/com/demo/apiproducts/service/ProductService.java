@@ -26,7 +26,6 @@ public class ProductService {
       Specification<RlProduct> spec = Specification.where(ProductSpecifications.hasProductType(idProductType))
                                                  .and(ProductSpecifications.hasProductName(productName))
                                                  .and(ProductSpecifications.isFavorite(onlyFavorite));
-
       Page<RlProduct> productsPage = productRepository.findAll(spec, PageRequest.of(page - 1, size));
       return new ProductResponse(productsPage, page, size);
    }

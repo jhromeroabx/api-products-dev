@@ -8,5 +8,4 @@ import lombok.Setter;
 public class FavoriteDTO {
    private Long idFavorites;
    private Long productId;
-
 }

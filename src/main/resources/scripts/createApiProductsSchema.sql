@@ -36,3 +36,9 @@ create table rl_product_image
     deleted_at          timestamp
 );
 
+create table rl_favorites (
+    id_favorites serial primary key,
+    id_rl_product int not null,
+    foreign key (id_rl_product) references rl_product(id_rl_product),
+);
+
