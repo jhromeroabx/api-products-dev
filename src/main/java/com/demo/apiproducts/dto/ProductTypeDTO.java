@@ -12,6 +12,6 @@ public class ProductTypeDTO {
 
    public ProductTypeDTO(RlProductType productType) {
       this.idType = productType.getId();
-      this.description = productType.getName();
+      this.description = productType.getDescription();
    }
 }
