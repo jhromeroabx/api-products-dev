@@ -21,10 +21,13 @@ public class SecurityConfig {
       http.csrf(AbstractHttpConfigurer::disable)
           .cors(AbstractHttpConfigurer::disable)
           .formLogin(AbstractHttpConfigurer::disable)
-          .authorizeHttpRequests(config -> config.requestMatchers("/api/v1/**")
-                                                 .authenticated()
-                                                 .anyRequest()
-                                                 .permitAll())
+          .authorizeHttpRequests(config -> config.requestMatchers("/error",
+                                                                  "/swagger-ui/**",
+                                                                  "/v3/api-docs",
+                                                                  "/v3/api-docs/**")
+                                                 .permitAll()
+                                                 .requestMatchers("/api/v1/**")
+                                                 .authenticated())
           .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
           .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
       return http.build();

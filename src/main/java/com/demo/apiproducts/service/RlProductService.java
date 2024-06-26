@@ -10,10 +10,6 @@ import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,17 +21,12 @@ public class RlProductService {
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final RlProductImageMapper productImageMapper;
 
-   public ResponseProductByIdDTO getProductDTOById(Long idProduct) {
+   public ResponseProductByIdDTO getProductDTOById(Long idProduct, String userId) {
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      if (!(authentication instanceof UsernamePasswordAuthenticationToken)) {
-         throw new IllegalStateException("Unexpected authentication type");
-      }
-      User user = (User) authentication.getPrincipal();
-      String userId = user.getUsername();
+
       ResponseProductByIdDTO productDTO = ResponseProductByIdDTO.builder()
                                                                 .idProduct(productModel.getId())
                                                                 .name(productModel.getName())
