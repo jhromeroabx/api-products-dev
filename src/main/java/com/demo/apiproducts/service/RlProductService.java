@@ -21,7 +21,7 @@ public class RlProductService {
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final RlProductImageMapper productImageMapper;
 
-   public ResponseProductByIdDTO getProductDTOById(Long idProduct, String userId) {
+   public ResponseProductByIdDTO getProductDTOById(String userId, Long idProduct) {
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")

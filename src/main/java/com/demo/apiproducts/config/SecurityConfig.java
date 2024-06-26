@@ -26,7 +26,7 @@ public class SecurityConfig {
                                                                   "/v3/api-docs",
                                                                   "/v3/api-docs/**")
                                                  .permitAll()
-                                                 .requestMatchers("/api/v1/**")
+                                                 .anyRequest()
                                                  .authenticated())
           .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
           .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
