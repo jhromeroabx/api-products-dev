@@ -29,10 +29,14 @@ public class RlProduct {
    private String name;
    @Column(name = "description")
    private String description;
-   @Column(name = "large_description")
+   @Column(name = "large_descripcion")
    private String largeDescription;
    @Column(name = "deleted_at")
    private Date deletedAt;
+   @Column(name = "currency")
+   private Character currency;
+   @Column(name = "price")
+   private Double price;
    @ManyToOne()
    @JoinColumn(name = "id_rl_product_type", nullable = false)
    private RlProductType productType;
