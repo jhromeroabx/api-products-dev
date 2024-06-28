@@ -51,22 +51,21 @@ public class RlProductService {
       }
       productRepository.save(productModel);
 
-
       return productDTO;
    }
 
    private ResponseProductByIdDTO toResponseProductByIdDTO(RlProduct productModel) {
       return ResponseProductByIdDTO.builder()
-              .idProduct(productModel.getId())
-              .name(productModel.getName())
-              .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
-              .currency(productModel.getCurrency())
-              .price(productModel.getPrice())
-              .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
-              .isFavorite(false)
-              .description(productModel.getDescription())
-              .largeDescription(productModel.getLargeDescription())
-              .build();
+                                   .idProduct(productModel.getId())
+                                   .name(productModel.getName())
+                                   .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
+                                   .currency(productModel.getCurrency())
+                                   .price(productModel.getPrice())
+                                   .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
+                                   .isFavorite(false)
+                                   .description(productModel.getDescription())
+                                   .largeDescription(productModel.getLargeDescription())
+                                   .build();
    }
 
    private String getCurrentUserId() {
