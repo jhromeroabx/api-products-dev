@@ -26,9 +26,9 @@ public class RlProductController {
    }
 
    @PutMapping("/products/daily-offer")
-   public ResponseEntity <ResponseProductByIdDTO>  putDailyOffer(RequestProductDailyofferDTO params) {
+   public ResponseEntity<ResponseProductByIdDTO> putDailyOffer(@RequestBody RequestProductDailyofferDTO requestProductDailyofferDTO ) {
 
-      return ResponseEntity.status(HttpStatus.OK).body(rlProductService.putDailyOffer( params.getIdProduct()));
+      return ResponseEntity.status(HttpStatus.OK).body(rlProductService.putDailyOffer(requestProductDailyofferDTO.getIdProduct()));
+
    }
-
 }
