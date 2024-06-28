@@ -71,6 +71,7 @@ public class RlProductService {
    private String getCurrentUserId() {
       org.springframework.security.core.userdetails.User principal =
               (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
       return principal.getUsername();
    }
 }
