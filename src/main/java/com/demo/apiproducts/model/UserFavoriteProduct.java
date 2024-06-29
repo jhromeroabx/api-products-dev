@@ -9,27 +9,28 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "rl_product_image")
-public class RlProductImage {
+@Table(name = "user_favorite_product")
+public class UserFavoriteProduct {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "id_rl_product_image")
-   private Long id;
-   @Column(name = "provider")
-   private String provider;
-   @Column(name = "provider_link")
-   private String providerLink;
-   @Column(name = "deleted_at")
-   private Date deletedAt;
+   @Column(name = "id_favorite")
+   private Long idFavorite;
+   @Column(name = "id_user")
+   private Long idUser;
    @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "id_rl_product", nullable = false)
-   private RlProduct product;
+   @JoinColumn(name = "id_rl_product")
+   private RlProduct rlProduct;
 }

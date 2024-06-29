@@ -14,6 +14,8 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -21,25 +23,25 @@ import java.util.List;
 @Table(name = "rl_product")
 public class RlProduct {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_rl_product")
-    private Long id;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "description")
-    private String description;
-    @Column(name = "large_description")
-    private String largeDescription;
-    @Column(name = "currency")
-    private String currency;
-    @Column(name = "price")
-    private String price;
-    @Column(name = "deleted_at")
-    private Date deletedAt;
-    @ManyToOne()
-    @JoinColumn(name = "id_rl_product_type", nullable = false)
-    private RlProductType productType;
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<RlProductImage> productImages;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Column(name = "id_rl_product")
+   private Long id;
+   @Column(name = "name")
+   private String name;
+   @Column(name = "description")
+   private String description;
+   @Column(name = "large_descripcion")
+   private String largeDescription;
+   @Column(name = "deleted_at")
+   private Date deletedAt;
+   @Column(name = "currency")
+   private Character currency;
+   @Column(name = "price")
+   private Double price;
+   @ManyToOne()
+   @JoinColumn(name = "id_rl_product_type", nullable = false)
+   private RlProductType productType;
+   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+   private List <RlProductImage> productImages;
 }

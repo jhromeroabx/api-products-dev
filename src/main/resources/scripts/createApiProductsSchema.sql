@@ -18,9 +18,7 @@ create table rl_product
         primary key,
     name               varchar not null,
     description        varchar not null,
-    currency varchar not null,
-    price varchar not null,
-    large_description  text not null,
+    large_descripcion  text not null,
     deleted_at         timestamp,
     id_rl_product_type integer not null
         constraint fk_product_type
@@ -36,11 +34,5 @@ create table rl_product_image
     provider            varchar not null,
     provider_link       varchar not null,
     deleted_at          timestamp
-);
-
-create table rl_favorites (
-    id_favorites serial primary key,
-    id_rl_product int not null,
-    foreign key (id_rl_product) references rl_product(id_rl_product),
 );
 
