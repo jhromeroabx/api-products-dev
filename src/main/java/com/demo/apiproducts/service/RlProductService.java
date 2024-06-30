@@ -11,7 +11,6 @@ import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,7 +37,6 @@ public class RlProductService {
    }
 
    public ResponseProductByIdDTO putDailyOffer(Long idProduct) {
-      String userId = getCurrentUserId();
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
                       .message("The product with the ID: " + idProduct + " does not exist.")
@@ -63,13 +61,6 @@ public class RlProductService {
                                    .description(productModel.getDescription())
                                    .largeDescription(productModel.getLargeDescription())
                                    .build();
-   }
-
-   private String getCurrentUserId() {
-      org.springframework.security.core.userdetails.User principal =
-              (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-      return principal.getUsername();
    }
 }
 
