@@ -46,9 +46,6 @@ public class RlProductService {
       ResponseProductByIdDTO productDTO = toResponseProductByIdDTO(productModel);
       productRepository.deactivateCurrentDailyOffer();
       productModel.setDailyOffer(true);
-      if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(Long.parseLong(userId), idProduct))) {
-         productDTO.setFavorite(true);
-      }
       productRepository.save(productModel);
 
       return productDTO;
