@@ -9,12 +9,10 @@ import com.demo.apiproducts.mapper.RlProductTypeMapper;
 import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class RlProductService {
 
