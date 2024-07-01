@@ -39,8 +39,8 @@ public class RlProductService {
    public ResponseProductByIdDTO putDailyOffer(Long idProduct) {
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
-                      .message("The product with the ID: " + idProduct + " does not exist.")
-                      .build());
+                                       .message("The product with the ID: " + idProduct + " does not exist.")
+                                       .build());
       ResponseProductByIdDTO productDTO = toResponseProductByIdDTO(productModel);
       productRepository.deactivateCurrentDailyOffer();
       productModel.setDailyOffer(true);
