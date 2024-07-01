@@ -4,6 +4,7 @@ import static java.lang.Long.parseLong;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.mapper.RlProductImageMapper;
+import com.demo.apiproducts.mapper.RlProductMapper;
 import com.demo.apiproducts.mapper.RlProductTypeMapper;
 import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.repository.ProductRepository;
@@ -19,13 +20,25 @@ public class RlProductService {
    private final RlProductTypeMapper productTypeMapper;
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final RlProductImageMapper productImageMapper;
+   private final RlProductMapper productMapper; // Nuevo mapper
 
    public ResponseProductByIdDTO getProductDTOById(String userId, Long idProduct) {
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
-      ResponseProductByIdDTO productDTO = toResponseProductByIdDTO(productModel);
+
+      ResponseProductByIdDTO productDTO = ResponseProductByIdDTO.builder()
+                                                                .idProduct(productModel.getId())
+                                                                .name(productModel.getName())
+                                                                .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
+                                                                .currency(productModel.getCurrency())
+                                                                .price(productModel.getPrice())
+                                                                .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
+                                                                .isFavorite(false)
+                                                                .description(productModel.getDescription())
+                                                                .largeDescription(productModel.getLargeDescription())
+                                                                .build();
       if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(parseLong(userId), idProduct))) {
          productDTO.setFavorite(true);
       }
@@ -38,7 +51,7 @@ public class RlProductService {
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
-      ResponseProductByIdDTO productDTO = toResponseProductByIdDTO(productModel);
+      ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
       productRepository.deactivateCurrentDailyOffer();
       productModel.setDailyOffer(true);
       productRepository.save(productModel);
@@ -46,19 +59,6 @@ public class RlProductService {
       return productDTO;
    }
 
-   private ResponseProductByIdDTO toResponseProductByIdDTO(RlProduct productModel) {
-      return ResponseProductByIdDTO.builder()
-                                   .idProduct(productModel.getId())
-                                   .name(productModel.getName())
-                                   .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
-                                   .currency(productModel.getCurrency())
-                                   .price(productModel.getPrice())
-                                   .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
-                                   .isFavorite(false)
-                                   .description(productModel.getDescription())
-                                   .largeDescription(productModel.getLargeDescription())
-                                   .build();
-   }
 }
 
 
