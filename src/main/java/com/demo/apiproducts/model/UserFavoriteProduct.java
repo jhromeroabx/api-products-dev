@@ -31,6 +31,6 @@ public class UserFavoriteProduct {
    @Column(name = "id_user")
    private Long idUser;
    @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "id_rl_product")
+   @JoinColumn(name = "id_product")
    private RlProduct rlProduct;
 }
