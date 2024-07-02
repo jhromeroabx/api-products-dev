@@ -4,6 +4,7 @@ import com.demo.apiproducts.model.RlProduct;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecifications {
+
    public static Specification <RlProduct> hasProductType(Integer idProductType) {
       return (root, query, criteriaBuilder) -> {
          if (idProductType == null) {
@@ -13,7 +14,7 @@ public class ProductSpecifications {
       };
    }
 
-   public static Specification<RlProduct> hasProductName(String productName) {
+   public static Specification <RlProduct> hasProductName(String productName) {
       return (root, query, criteriaBuilder) -> {
          if (productName == null || productName.isEmpty()) {
             return criteriaBuilder.conjunction();
@@ -22,12 +23,4 @@ public class ProductSpecifications {
       };
    }
 
-   public static Specification<RlProduct> isFavorite(boolean onlyFavorite) {
-      return (root, query, criteriaBuilder) -> {
-         if (!onlyFavorite) {
-            return criteriaBuilder.conjunction();
-         }
-         return criteriaBuilder.isTrue(root.get("isFavorite"));
-      };
-   }
 }
