@@ -3,6 +3,7 @@ package com.demo.apiproducts.controller;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.request.RequestProductDailyofferDTO;
 import com.demo.apiproducts.service.RlProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class RlProductController {
    }
 
    @PutMapping("/products/daily-offer")
-   public ResponseEntity<ResponseProductByIdDTO> putDailyOffer(@RequestBody RequestProductDailyofferDTO requestProductDailyofferDTO ) {
+   public ResponseEntity<ResponseProductByIdDTO> putDailyOffer(@Valid @RequestBody RequestProductDailyofferDTO requestProductDailyofferDTO ) {
 
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.putDailyOffer(requestProductDailyofferDTO.getIdProduct()));
 

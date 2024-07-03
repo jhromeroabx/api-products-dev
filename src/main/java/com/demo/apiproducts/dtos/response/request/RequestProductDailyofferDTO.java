@@ -1,5 +1,6 @@
 package com.demo.apiproducts.dtos.response.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestProductDailyofferDTO implements Serializable {
-
+    @NotNull
     private Long idProduct;
 
 }
