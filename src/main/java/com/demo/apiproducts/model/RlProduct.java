@@ -10,8 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 import java.util.Date;
 import java.util.List;
 import lombok.Getter;
@@ -31,7 +29,7 @@ public class RlProduct {
    private String name;
    @Column(name = "description")
    private String description;
-   @Column(name = "large_descripcion")
+   @Column(name = "large_description")
    private String largeDescription;
    @Column(name = "deleted_at")
    private Date deletedAt;

@@ -16,7 +16,6 @@ import com.demo.apiproducts.specifications.ProductSpecifications;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -58,27 +57,22 @@ public class RlProductService {
    public ResponseGetAllProductsDTO getAllProductsDTO(Integer idProductType, String productName, boolean onlyFavorite, Integer page, Integer size, String userId) {
       Specification <RlProduct> spec = Specification.where(ProductSpecifications.hasProductType(idProductType))
                                                     .and(ProductSpecifications.hasProductName(productName));
+
+      if (onlyFavorite) {
+         spec = spec.and(ProductSpecifications.isFavoriteForUser(userId));
+      }
+
       Page <RlProduct> productsPage = productRepository.findAll(spec, PageRequest.of(page - 1, size));
-      List <ResponseProductDTO> products = productsPage.getContent().stream().map(productMapper::toResponseProductDTO).toList();
+      List <ResponseProductDTO> products = productsPage.getContent().stream()
+                                                       .map(productMapper::toResponseProductDTO)
+                                                       .toList();
 
       for (ResponseProductDTO product : products) {
-         product.setFavorite(Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(parseLong(userId), product.getIdProduct())));
+         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(Long.parseLong(userId), product.getIdProduct()))) {
+            product.setFavorite(true);
+         }
       }
-      if (onlyFavorite) {
-         products = products.stream().filter(ResponseProductDTO::isFavorite).toList();
 
-         List <ResponseProductDTO> pagedProducts = products.stream().skip((long) (page - 1) * size).limit(size).toList();
-         Page <ResponseProductDTO> onlyFavoriteProductsPage = new PageImpl <>(pagedProducts, productsPage.getPageable(), products.size());
-
-         return ResponseGetAllProductsDTO.builder()
-                                         .page(page)
-                                         .size(size)
-                                         .totalPages(onlyFavoriteProductsPage.getTotalPages())
-                                         .totalProducts(onlyFavoriteProductsPage.getTotalElements())
-                                         .products(onlyFavoriteProductsPage.getContent())
-                                         .build();
-
-      }
       return ResponseGetAllProductsDTO.builder()
                                       .page(page)
                                       .size(size)
