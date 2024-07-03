@@ -9,6 +9,7 @@ import com.demo.apiproducts.mapper.RlProductTypeMapper;
 import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,13 +47,14 @@ public class RlProductService {
       return productDTO;
    }
 
+   @Transactional
    public ResponseProductByIdDTO putDailyOffer(Long idProduct) {
+      productRepository.deactivateCurrentDailyOffer();
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
       ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
-      productRepository.deactivateCurrentDailyOffer();
       productModel.setDailyOffer(true);
       productRepository.save(productModel);
 
