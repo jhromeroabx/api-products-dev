@@ -54,9 +54,10 @@ public class RlProductService {
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
+      if (!productModel.getDailyOffer()) {
+         productRepository.updateDailyOfferById(idProduct, true);
+      }
       ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
-      productModel.setDailyOffer(true);
-      productRepository.save(productModel);
 
       return productDTO;
    }

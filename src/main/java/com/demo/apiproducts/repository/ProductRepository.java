@@ -15,5 +15,9 @@ public interface ProductRepository extends JpaRepository <RlProduct, Long> {
     @Query(nativeQuery = true, value = "UPDATE rl_api_products.rl_product SET daily_offer = false WHERE daily_offer = true")
     void deactivateCurrentDailyOffer();
 
+    @Modifying
+    @Query(nativeQuery = true, value = "UPDATE rl_api_products.rl_product SET daily_offer = ?2 WHERE id_rl_product = ?1")
+    void updateDailyOfferById(Long id, boolean dailyOffer);
+
 }
 
