@@ -56,16 +56,28 @@ public class RlProductService {
                                        .message("The product with the ID: " + requestHighProduct.getIdType() + " does not exist.")
                                        .build());
       if (rlProductType.getDeletedAt() != null) {
-         throw new IdNotFoundException("id Not Found Exceptiom");
-         }
+         throw new IdNotFoundException("id Not Found Exception");
+      }
       RlProduct rlProduct = RlProduct.builder()
                                      .name(requestHighProduct.getName())
-                                     .productType(rlProductType).currency(requestHighProduct.getCurrency())
+                                     .productType(rlProductType)
+                                     .currency(requestHighProduct.getCurrency())
                                      .price(requestHighProduct.getPrice())
                                      .description(requestHighProduct.getDescription())
                                      .largeDescription(requestHighProduct.getLargeDescription()).build();
 
       productRepository.save(rlProduct);
-      return ResponseHighProduct.builder().build();
+
+      return ResponseHighProduct.builder()
+                                .idProduct(rlProduct.getId())
+                                .name(rlProduct.getName())
+                                .productType(rlProductType)
+                                .currency(rlProduct.getCurrency())
+                                .price(rlProduct.getPrice())
+                                .images(rlProduct.getProductImages().stream().map(productImageMapper::toDTO).toList())
+                                .isFavorite(false)
+                                .description(rlProduct.getDescription())
+                                .largeDescription(rlProduct.getLargeDescription())
+                                .build();
    }
 }

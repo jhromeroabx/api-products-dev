@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ResponseHighProduct implements Serializable  {
-   private int idProduct;
+   private Long idProduct;
    private String name;
    private RlProductType productType;
    private Character currency;

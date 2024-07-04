@@ -24,11 +24,14 @@ public class RlProductController {
    private final RlProductService rlProductService;
 
    @GetMapping("/products/{idProduct}")
-   public ResponseEntity <ResponseProductByIdDTO> getProductById(@AuthenticationPrincipal User user, @PathVariable Long idProduct) {
+   public ResponseEntity <ResponseProductByIdDTO> getProductById(@AuthenticationPrincipal User user,
+                                                                 @PathVariable Long idProduct) {
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getProductDTOById(user.getUsername(), idProduct));
    }
+
    @PostMapping("/products")
-   public ResponseEntity <ResponseHighProduct> postcreateproduct(@RequestBody RequestHighProduct requestHighProduct) {
-   return ResponseEntity.status(HttpStatus.OK).body()
+   public ResponseEntity <ResponseHighProduct> createProduct(@RequestBody RequestHighProduct requestHighProduct) {
+
+      return ResponseEntity.status(HttpStatus.OK).body(rlProductService.createProductDTO(requestHighProduct));
    }
 }
