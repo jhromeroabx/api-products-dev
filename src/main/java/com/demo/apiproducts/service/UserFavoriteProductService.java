@@ -8,6 +8,7 @@ import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.model.UserFavoriteProduct;
 import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +25,17 @@ public class UserFavoriteProductService {
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
       if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(parseLong(userId), idProduct))) {
-         throw new RepeatedProductInFavoritesListException("The product with the ID: " + idProduct + " is already in the user's favorite list.");
+        UserFavoriteProduct userFavoriteProduct = userFavoriteProductRepository.findByUserIdAndIdProduct(parseLong(userId), idProduct);
+        userFavoriteProduct.setDeletedAt(new Date());
+        userFavoriteProductRepository.save(userFavoriteProduct);
+      } else {
+         UserFavoriteProduct userFavoriteProduct = UserFavoriteProduct
+                 .builder()
+                 .idUser(parseLong(userId))
+                 .rlProduct(rlProduct)
+                 .build();
+
+         userFavoriteProductRepository.save(userFavoriteProduct);
       }
-      UserFavoriteProduct userFavoriteProduct = UserFavoriteProduct
-              .builder()
-              .idUser(parseLong(userId))
-              .rlProduct(rlProduct)
-              .build();
-
-      userFavoriteProductRepository.save(userFavoriteProduct);
-
    }
 }
