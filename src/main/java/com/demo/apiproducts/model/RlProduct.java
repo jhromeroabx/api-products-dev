@@ -37,6 +37,8 @@ public class RlProduct {
    private Character currency;
    @Column(name = "price")
    private Double price;
+   @Column(name = "daily_offer", unique = true)
+   private Boolean dailyOffer;
    @ManyToOne()
    @JoinColumn(name = "id_rl_product_type", nullable = false)
    private RlProductType productType;
