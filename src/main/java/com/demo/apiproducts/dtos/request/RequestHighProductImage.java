@@ -7,10 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class RequestHighProductImage implements Serializable{
+public class RequestHighProductImage implements Serializable {
+
    private String link;
    private String provider;
    private Boolean principal;

@@ -35,7 +35,7 @@ public class RlProduct {
    private String name;
    @Column(name = "description")
    private String description;
-   @Column(name = "large_descripcion")
+   @Column(name = "large_description")
    private String largeDescription;
    @Column(name = "deleted_at")
    private Date deletedAt;

@@ -27,5 +27,5 @@ public class RequestHighProduct implements Serializable {
    @NotBlank
    private String largeDescription;
    @NotBlank
-   private List <RequestHighProductImage> productImages;
+   private List <RequestHighProductImage> images;
 }

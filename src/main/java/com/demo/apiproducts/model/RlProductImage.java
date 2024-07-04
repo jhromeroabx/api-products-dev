@@ -10,11 +10,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "rl_product_image")
 public class RlProductImage {
@@ -29,7 +35,9 @@ public class RlProductImage {
    private String providerLink;
    @Column(name = "deleted_at")
    private Date deletedAt;
-   @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "id_rl_product", nullable = false)
+   @Column(name = "principal")
+   private Boolean principal;
+   @ManyToOne(fetch = FetchType.LAZY )
+   @JoinColumn(name = "id_rl_product")
    private RlProduct product;
 }

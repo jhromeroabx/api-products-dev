@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class ResponseHighProduct implements Serializable  {
    private Long idProduct;
    private String name;
-   private RlProductType productType;
+   private ResponseProductTyDTO productType;
    private Character currency;
    private Double price;
    private List<ResponseProductImageDTO>images;
