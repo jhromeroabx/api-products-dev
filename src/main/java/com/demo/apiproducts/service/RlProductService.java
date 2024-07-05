@@ -8,6 +8,7 @@ import com.demo.apiproducts.dtos.response.ResponseHighProduct;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.mapper.RlProductImageMapper;
+import com.demo.apiproducts.mapper.RlProductMapper;
 import com.demo.apiproducts.mapper.RlProductTypeMapper;
 import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.model.RlProductImage;
@@ -16,6 +17,7 @@ import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.ProductTypeRepository;
 import com.demo.apiproducts.repository.RlProductImageRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class RlProductService {
    private final ProductTypeRepository productTypeRepository;
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final RlProductImageMapper productImageMapper;
+   private final RlProductMapper productMapper; // Nuevo mapper
    private final RlProductImageRepository rlProductImageRepository;
 
    public ResponseProductByIdDTO getProductDTOById(String userId, Long idProduct) {
@@ -54,6 +57,21 @@ public class RlProductService {
       if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(parseLong(userId), idProduct))) {
          productDTO.setFavorite(true);
       }
+
+      return productDTO;
+   }
+
+   @Transactional
+   public ResponseProductByIdDTO putDailyOffer(Long idProduct) {
+      productRepository.deactivateCurrentDailyOffer();
+      RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
+              () -> IdNotFoundException.builder()
+                                       .message("The product with the ID: " + idProduct + " does not exist.")
+                                       .build());
+      if (!productModel.getDailyOffer()) {
+         productRepository.updateDailyOfferById(idProduct, true);
+      }
+      ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
 
       return productDTO;
    }

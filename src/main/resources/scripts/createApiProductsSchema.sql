@@ -36,3 +36,5 @@ create table rl_product_image
     deleted_at          timestamp
 );
 
+ALTER TABLE rl_product  ADD COLUMN daily_offer BOOLEAN DEFAULT FALSE;
+CREATE UNIQUE INDEX unique_daily_offer ON rl_products(daily_offer) WHERE daily_offer IS TRUE;

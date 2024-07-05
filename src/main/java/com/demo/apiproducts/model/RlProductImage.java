@@ -37,7 +37,7 @@ public class RlProductImage {
    private Date deletedAt;
    @Column(name = "principal")
    private Boolean principal;
-   @ManyToOne(fetch = FetchType.LAZY )
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "id_rl_product")
    private RlProduct product;
 }
