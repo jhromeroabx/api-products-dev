@@ -2,26 +2,25 @@ package com.demo.apiproducts.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class ResponseCreateProduct implements Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ResponseProductDTO implements Serializable {
 
    private Long idProduct;
    private String name;
    private ResponseProductTyDTO productType;
    private Character currency;
    private Double price;
-   private List <ResponseProductImageDTO> images;
+   private String image;
    @JsonProperty("isFavorite")
-   private boolean isFavorite = false;
+   private boolean isFavorite;
    private String description;
-   private String largeDescription;
+
 }

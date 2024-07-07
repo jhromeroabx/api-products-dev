@@ -3,6 +3,7 @@ package com.demo.apiproducts.mapper;
 import com.demo.apiproducts.dtos.request.RequestCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
+import com.demo.apiproducts.dtos.response.ResponseProductDTO;
 import com.demo.apiproducts.model.RlProduct;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -29,10 +30,18 @@ public interface RlProductMapper {
    @Mapping(source = "productType", target = "productType")
    @Mapping(source = "currency", target = "currency")
    @Mapping(source = "price", target = "price")
+   @Mapping(source = "productImages", target = "images")
    @Mapping(source = "description", target = "description")
    @Mapping(source = "largeDescription", target = "largeDescription")
-   @Mapping(source = "productImages", target = "images")
    ResponseCreateProduct toResponseCreateProduct(RlProduct product);
 
+   @Mapping(source = "id", target = "idProduct")
+   @Mapping(source = "name", target = "name")
+   @Mapping(source = "productType", target = "productType")
+   @Mapping(source = "currency", target = "currency")
+   @Mapping(source = "price", target = "price")
+   @Mapping(source = "productImages", target = "image")
+   @Mapping(source = "description", target = "description")
+   ResponseProductDTO toResponseProductDTO(RlProduct productModel);
 }
 

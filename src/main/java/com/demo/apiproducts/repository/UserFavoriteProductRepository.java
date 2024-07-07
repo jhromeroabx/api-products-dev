@@ -1,6 +1,7 @@
 package com.demo.apiproducts.repository;
 
 import com.demo.apiproducts.model.UserFavoriteProduct;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +15,8 @@ public interface UserFavoriteProductRepository extends JpaRepository <UserFavori
 
    @Query("SELECT p FROM UserFavoriteProduct p WHERE p.idUser = :idUser AND p.rlProduct.id = :idProduct AND p.deletedAt IS NULL")
    UserFavoriteProduct findByUserIdAndIdProduct(Long idUser, Long idProduct);
+
+   @Query("SELECT p.rlProduct.id FROM UserFavoriteProduct p WHERE p.idUser = :idUser")
+   List <Long> findFavoriteProductIdsByUserId(@Param("idUser") Long idUser);
+
 }
