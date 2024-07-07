@@ -5,10 +5,12 @@ import static java.lang.Long.parseLong;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.mapper.RlProductImageMapper;
+import com.demo.apiproducts.mapper.RlProductMapper;
 import com.demo.apiproducts.mapper.RlProductTypeMapper;
 import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ public class RlProductService {
    private final RlProductTypeMapper productTypeMapper;
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final RlProductImageMapper productImageMapper;
+   private final RlProductMapper productMapper; // Nuevo mapper
 
    public ResponseProductByIdDTO getProductDTOById(String userId, Long idProduct) {
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
@@ -45,4 +48,21 @@ public class RlProductService {
       return productDTO;
    }
 
+   @Transactional
+   public ResponseProductByIdDTO putDailyOffer(Long idProduct) {
+      productRepository.deactivateCurrentDailyOffer();
+      RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
+              () -> IdNotFoundException.builder()
+                                       .message("The product with the ID: " + idProduct + " does not exist.")
+                                       .build());
+      if (!productModel.getDailyOffer()) {
+         productRepository.updateDailyOfferById(idProduct, true);
+      }
+      ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
+
+      return productDTO;
+   }
+
 }
+
+
