@@ -24,9 +24,9 @@ public class UserFavoriteProductService {
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
       if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(parseLong(userId), idProduct))) {
-        UserFavoriteProduct userFavoriteProduct = userFavoriteProductRepository.findByUserIdAndIdProduct(parseLong(userId), idProduct);
-        userFavoriteProduct.setDeletedAt(new Date());
-        userFavoriteProductRepository.save(userFavoriteProduct);
+         UserFavoriteProduct userFavoriteProduct = userFavoriteProductRepository.findByUserIdAndIdProduct(parseLong(userId), idProduct);
+         userFavoriteProduct.setDeletedAt(new Date());
+         userFavoriteProductRepository.save(userFavoriteProduct);
       } else {
          UserFavoriteProduct userFavoriteProduct = UserFavoriteProduct
                  .builder()

@@ -1,5 +1,7 @@
 package com.demo.apiproducts.controller;
 
+import com.demo.apiproducts.dtos.request.RequestCreateProduct;
+import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.request.RequestProductDailyofferDTO;
 import com.demo.apiproducts.service.RlProductService;
@@ -29,8 +31,8 @@ public class RlProductController {
    private final UserFavoriteProductService userFavoriteProductService;
 
    @GetMapping("/products/{idProduct}")
-   public ResponseEntity <ResponseProductByIdDTO> getProductById(@AuthenticationPrincipal User user, @PathVariable Long idProduct) {
-
+   public ResponseEntity <ResponseProductByIdDTO> getProductById(@AuthenticationPrincipal User user,
+                                                                 @PathVariable Long idProduct) {
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getProductDTOById(user.getUsername(), idProduct));
    }
 
@@ -39,6 +41,12 @@ public class RlProductController {
 
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.putDailyOffer(requestProductDailyofferDTO.getIdProduct()));
 
+   }
+
+   @PostMapping("/products")
+   public ResponseEntity <ResponseCreateProduct> createProduct(@RequestBody RequestCreateProduct requestHighProduct) {
+
+      return ResponseEntity.status(HttpStatus.OK).body(rlProductService.createProductDTO(requestHighProduct));
    }
 
    @PostMapping("/products/{idProduct}/favorite")
