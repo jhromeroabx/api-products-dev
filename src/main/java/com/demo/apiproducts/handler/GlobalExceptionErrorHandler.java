@@ -4,6 +4,7 @@ import com.demo.apiproducts.dtos.response.ErrorDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.exception.MultipleMainImagesException;
 import com.demo.apiproducts.exception.NoMainImageException;
+import com.demo.apiproducts.exception.RepeatedProductInFavoritesListException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,5 +49,20 @@ public class GlobalExceptionErrorHandler {
               .status(HttpStatus.NOT_FOUND.value())
               .build();
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
+   }
+
+   @ExceptionHandler(RepeatedProductInFavoritesListException.class)
+   public ResponseEntity <ErrorDTO> handleException(RepeatedProductInFavoritesListException e) {
+      log.error("Repeated product in the favorites list.", e);
+
+      ErrorDTO error = ErrorDTO
+              .builder()
+              .message(e.getMessage())
+              .code("REPEATED_PRODUCT_IN_FAVORITES_LIST")
+              .status(HttpStatus.BAD_REQUEST.value())
+              .build();
+
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+
    }
 }
