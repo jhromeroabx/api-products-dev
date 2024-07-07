@@ -1,6 +1,7 @@
 package com.demo.apiproducts.service;
 
 import static java.lang.Long.parseLong;
+
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.mapper.RlProductImageMapper;
