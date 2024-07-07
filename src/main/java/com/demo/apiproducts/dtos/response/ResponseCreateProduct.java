@@ -1,7 +1,5 @@
 package com.demo.apiproducts.dtos.response;
 
-import com.demo.apiproducts.dtos.request.RequestHighProduct;
-import com.demo.apiproducts.model.RlProductType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.List;
@@ -14,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseHighProduct implements Serializable  {
+public class ResponseCreateProduct implements Serializable  {
    private Long idProduct;
    private String name;
    private ResponseProductTyDTO productType;

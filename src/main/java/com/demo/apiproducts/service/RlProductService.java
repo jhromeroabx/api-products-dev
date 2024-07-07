@@ -2,11 +2,13 @@ package com.demo.apiproducts.service;
 
 import static java.lang.Long.parseLong;
 
-import com.demo.apiproducts.dtos.request.RequestHighProduct;
-import com.demo.apiproducts.dtos.request.RequestHighProductImage;
-import com.demo.apiproducts.dtos.response.ResponseHighProduct;
+import com.demo.apiproducts.dtos.request.RequestCreateProduct;
+import com.demo.apiproducts.dtos.request.RequestCreateProductImage;
+import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
+import com.demo.apiproducts.exception.MultipleMainImagesException;
+import com.demo.apiproducts.exception.NoMainImageException;
 import com.demo.apiproducts.mapper.RlProductImageMapper;
 import com.demo.apiproducts.mapper.RlProductMapper;
 import com.demo.apiproducts.mapper.RlProductTypeMapper;
@@ -76,64 +78,41 @@ public class RlProductService {
       return productDTO;
    }
 
-   public ResponseHighProduct createProductDTO(RequestHighProduct requestHighProduct) {
-      RlProductType rlProductType = productTypeRepository.findById(requestHighProduct.getIdType()).orElseThrow(
+   public ResponseCreateProduct createProductDTO(RequestCreateProduct requestCreateProduct) {
+      RlProductType rlProductType = productTypeRepository.findById(requestCreateProduct.getIdType()).orElseThrow(
               () -> IdNotFoundException.builder()
-                                       .message("The product with the ID: " + requestHighProduct.getIdType() + " does not exist.")
+                                       .message("The product with the ID: " + requestCreateProduct.getIdType() + " does not exist.")
                                        .build());
       if (rlProductType.getDeletedAt() != null) {
          throw new IdNotFoundException("id Not Found Exception");
       }
 
-      List <RequestHighProductImage> productImages = requestHighProduct.getImages();
+      List <RequestCreateProductImage> productImages = requestCreateProduct.getImages();
 
       var principalCount = productImages.stream()
-                                        .filter(RequestHighProductImage::getPrincipal)
+                                        .filter(RequestCreateProductImage::getPrincipal)
                                         .count();
 
       if (principalCount > 1) {
-         throw new IllegalArgumentException("Only one image can be main.");
+         throw new MultipleMainImagesException("Only one image can be main.");
       } else if (principalCount == 0) {
-         throw new IllegalArgumentException("There must be a main image.");
+         throw new NoMainImageException("There must be a main image.");
       }
 
-      RlProduct rlProduct = RlProduct.builder()
-                                     .name(requestHighProduct.getName())
-                                     .productType(rlProductType)
-                                     .currency(requestHighProduct.getCurrency())
-                                     .price(requestHighProduct.getPrice())
-                                     .description(requestHighProduct.getDescription())
-                                     .largeDescription(requestHighProduct.getLargeDescription())
-                                     .productImages(productImages.stream().map(productImageMapper::toModel).toList())
-                                     .build();
+      RlProduct rlProduct = productMapper.toModel(requestCreateProduct);
 
       List <RlProductImage> images = new ArrayList <>();
-      for (RequestHighProductImage requestHighProductImage : requestHighProduct.getImages()) {
-         RlProductImage rlProductImage = RlProductImage
-                 .builder()
-                 .product(rlProduct)
-                 .provider(requestHighProductImage.getProvider())
-                 .providerLink(requestHighProductImage.getLink())
-                 .principal(requestHighProductImage.getPrincipal())
-                 .build();
-
+      for (RequestCreateProductImage requestHighProductImage : requestCreateProduct.getImages()) {
+         RlProductImage rlProductImage = productImageMapper.toModel(requestHighProductImage);
+         rlProductImage.setProduct(rlProduct);
          images.add(rlProductImage);
       }
-
       rlProduct.setProductImages(images);
       productRepository.save(rlProduct);
-      rlProductImageRepository.saveAll(rlProduct.getProductImages());
 
-      return ResponseHighProduct.builder()
-                                .idProduct(rlProduct.getId())
-                                .name(rlProduct.getName())
-                                .productType(productTypeMapper.toResponseProductTyDTO(rlProduct.getProductType()))
-                                .currency(rlProduct.getCurrency())
-                                .price(rlProduct.getPrice())
-                                .images(rlProduct.getProductImages().stream().map(productImageMapper::toDTO).toList())
-                                .isFavorite(false)
-                                .description(rlProduct.getDescription())
-                                .largeDescription(rlProduct.getLargeDescription())
-                                .build();
+      ResponseCreateProduct responseCreateProduct = productMapper.toResponseCreateProduct(rlProduct);
+      responseCreateProduct.setFavorite(false);
+      return responseCreateProduct;
    }
+
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestHighProduct implements Serializable {
+public class RequestCreateProduct implements Serializable {
    @NotBlank
    private String name;
    @NotNull
@@ -26,6 +26,6 @@ public class RequestHighProduct implements Serializable {
    private String description;
    @NotBlank
    private String largeDescription;
-   @NotBlank
-   private List <RequestHighProductImage> images;
+   @NotNull
+   private List <RequestCreateProductImage> images;
 }

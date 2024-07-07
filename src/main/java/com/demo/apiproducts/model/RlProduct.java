@@ -1,5 +1,6 @@
 package com.demo.apiproducts.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -48,6 +49,6 @@ public class RlProduct {
    @ManyToOne()
    @JoinColumn(name = "id_rl_product_type", nullable = false)
    private RlProductType productType;
-   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
    private List <RlProductImage> productImages;
 }
