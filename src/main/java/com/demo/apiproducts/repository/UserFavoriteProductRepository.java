@@ -10,8 +10,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserFavoriteProductRepository extends JpaRepository <UserFavoriteProduct, Long> {
 
-   @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM UserFavoriteProduct p WHERE p.idUser = :idUser AND p.rlProduct.id = :idProduct")
+   @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM UserFavoriteProduct p WHERE p.idUser = :idUser AND p.rlProduct.id = :idProduct AND p.deletedAt IS NULL")
    Boolean existsFavoriteProductForUser(@Param("idUser") Long idUser, @Param("idProduct") Long idProduct);
+
+   @Query("SELECT p FROM UserFavoriteProduct p WHERE p.idUser = :idUser AND p.rlProduct.id = :idProduct AND p.deletedAt IS NULL")
+   UserFavoriteProduct findByUserIdAndIdProduct(Long idUser, Long idProduct);
 
    @Query("SELECT p.rlProduct.id FROM UserFavoriteProduct p WHERE p.idUser = :idUser")
    List <Long> findFavoriteProductIdsByUserId(@Param("idUser") Long idUser);
