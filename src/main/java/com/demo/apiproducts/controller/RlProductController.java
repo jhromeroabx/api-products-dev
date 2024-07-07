@@ -32,9 +32,9 @@ public class RlProductController {
    }
 
    @PostMapping("/products/{idProduct}/favorite")
-   public ResponseEntity <Void> addFavoriteProduct(@Valid @PathVariable Long idProduct,
-                                                   @AuthenticationPrincipal User user) {
-      userFavoriteProductService.addFavoriteProduct(idProduct, user.getUsername());
+   public ResponseEntity <Void> addAndRemoveFavoriteProduct(@Valid @PathVariable Long idProduct,
+                                                            @AuthenticationPrincipal User user) {
+      userFavoriteProductService.addAndRemoveFavoriteProduct(idProduct, user.getUsername());
       return ResponseEntity.status(HttpStatus.OK).build();
    }
 

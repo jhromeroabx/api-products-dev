@@ -3,7 +3,6 @@ package com.demo.apiproducts.service;
 import static java.lang.Long.parseLong;
 
 import com.demo.apiproducts.exception.IdNotFoundException;
-import com.demo.apiproducts.exception.RepeatedProductInFavoritesListException;
 import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.model.UserFavoriteProduct;
 import com.demo.apiproducts.repository.ProductRepository;
@@ -19,7 +18,7 @@ public class UserFavoriteProductService {
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final ProductRepository productRepository;
 
-   public void addFavoriteProduct(Long idProduct, String userId) {
+   public void addAndRemoveFavoriteProduct(Long idProduct, String userId) {
       RlProduct rlProduct = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
