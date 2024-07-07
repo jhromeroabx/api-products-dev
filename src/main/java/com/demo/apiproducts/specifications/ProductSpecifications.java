@@ -26,13 +26,13 @@ public class ProductSpecifications {
       };
    }
 
-   public static Specification <RlProduct> isFavoriteForUser(String userId) {
+   public static Specification<RlProduct> isFavoriteForUser(String userId, boolean onlyFavorite) {
       return (root, query, criteriaBuilder) -> {
-         if (userId == null) {
-            return null;
+         if (userId == null || !onlyFavorite) {
+            return criteriaBuilder.conjunction();
          }
-         Subquery <Long> subquery = query.subquery(Long.class);
-         Root <UserFavoriteProduct> subRoot = subquery.from(UserFavoriteProduct.class);
+         Subquery<Long> subquery = query.subquery(Long.class);
+         Root<UserFavoriteProduct> subRoot = subquery.from(UserFavoriteProduct.class);
          subquery.select(subRoot.get("rlProduct").get("id"))
                  .where(criteriaBuilder.equal(subRoot.get("idUser"), Long.parseLong(userId)));
 

@@ -56,22 +56,21 @@ public class RlProductService {
 
    public ResponseGetAllProductsDTO getAllProductsDTO(Integer idProductType, String productName, boolean onlyFavorite, Integer page, Integer size, String userId) {
       Specification <RlProduct> spec = Specification.where(ProductSpecifications.hasProductType(idProductType))
-                                                    .and(ProductSpecifications.hasProductName(productName));
-
-      if (onlyFavorite) {
-         spec = spec.and(ProductSpecifications.isFavoriteForUser(userId));
-      }
+                                                    .and(ProductSpecifications.hasProductName(productName))
+                                                    .and(ProductSpecifications.isFavoriteForUser(userId, onlyFavorite));
 
       Page <RlProduct> productsPage = productRepository.findAll(spec, PageRequest.of(page - 1, size));
       List <ResponseProductDTO> products = productsPage.getContent().stream()
                                                        .map(productMapper::toResponseProductDTO)
                                                        .toList();
 
+      List<Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
       for (ResponseProductDTO product : products) {
-         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(Long.parseLong(userId), product.getIdProduct()))) {
+         if (favoriteProductIds.contains(product.getIdProduct())) {
             product.setFavorite(true);
          }
       }
+
 
       return ResponseGetAllProductsDTO.builder()
                                       .page(page)
