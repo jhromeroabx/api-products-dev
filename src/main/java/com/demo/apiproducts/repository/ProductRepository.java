@@ -23,9 +23,7 @@ public interface ProductRepository extends JpaRepository <RlProduct, Long> {
     @Query("SELECT lup.rlProduct.id FROM RlLastUserProduct lup WHERE lup.idUser = :userId")
     Long findLastVisitedProductId(@Param("userId") Long userId);
 
-
     @Query("SELECT p FROM RlProduct p WHERE p.dailyOffer = true")
     RlProduct findDailyOffer();
-
 }
 
