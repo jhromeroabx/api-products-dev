@@ -66,13 +66,12 @@ public class RlProductService {
    public ResponseGetOfferOrProductDTO getDailyOfferOrLastUserProduct(String userId) {
       Long userIdLong = Long.parseLong(userId);
       Long lastVisitedProductId = productRepository.findLastVisitedProductId(userIdLong);
-
       if (lastVisitedProductId != null) {
          RlProduct productModel = productRepository.findById(lastVisitedProductId).orElseThrow(
                  () -> IdNotFoundException.builder()
                                           .message("El producto con el ID: " + lastVisitedProductId + " no existe.")
                                           .build());
-         return ResponseGetOfferOrProductDTO.builder()
+          ResponseGetOfferOrProductDTO lasUserProductDTO = ResponseGetOfferOrProductDTO.builder()
                                             .idProduct(productModel.getId())
                                             .name(productModel.getName())
                                             .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
@@ -83,11 +82,20 @@ public class RlProductService {
                                             .isDailyOffer(false)
                                             .description(productModel.getDescription())
                                             .build();
+         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong , lastVisitedProductId))) {
+            lasUserProductDTO.setFavorite(true);
+         }
+
+         return  lasUserProductDTO;
+
       } else {
          RlProduct dailyOfferProduct = productRepository.findDailyOffer();
-         ResponseGetOfferOrProductDTO offerOrProductDTO = productMapper.toResponseGetOfferOrProductDTO(dailyOfferProduct);
-         offerOrProductDTO.setDailyOffer(true);
-         return offerOrProductDTO;
+         ResponseGetOfferOrProductDTO dailyOfferDTO = productMapper.toResponseGetOfferOrProductDTO(dailyOfferProduct);
+         dailyOfferDTO.setDailyOffer(true);
+         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong , lastVisitedProductId))) {
+            dailyOfferDTO.setFavorite(true);
+         }
+         return dailyOfferDTO;
       }
    }
 }
