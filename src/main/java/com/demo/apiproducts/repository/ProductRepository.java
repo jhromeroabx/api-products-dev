@@ -20,5 +20,11 @@ public interface ProductRepository extends JpaRepository <RlProduct, Long> {
     @Query("UPDATE RlProduct p SET p.dailyOffer = :dailyOffer WHERE p.id = :id")
     void updateDailyOfferById(@Param("id") Long id, @Param("dailyOffer") boolean dailyOffer);
 
+    @Query("SELECT lup.id FROM LastUserProduct lup WHERE lup.user.id = :userId AND lup.deletedAt IS NULL")
+    Long findLastVisitedProductId(@Param("userId") Long userId);
+
+    @Query("SELECT p FROM RlProduct p WHERE p.dailyOffer = true")
+    RlProduct findDailyOffer();
+
 }
 

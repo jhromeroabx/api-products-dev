@@ -48,7 +48,7 @@ public class RlProductService {
    }
 
    @Transactional
-   public ResponseProductByIdDTO putDailyOffer(Long idProduct) {
+   public ResponseProductByIdDTO putDailyOffer(String userId,Long idProduct) {
       productRepository.deactivateCurrentDailyOffer();
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
@@ -60,6 +60,29 @@ public class RlProductService {
       ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
 
       return productDTO;
+   }
+
+   public ResponseProductByIdDTO getDailyOfferOrLastUserProduct(String userId) {
+      Long userIdLong = Long.parseLong(userId);
+      Long lastVisitedProductId = productRepository.findLastVisitedProductId(userIdLong);
+
+
+      if (lastVisitedProductId != null) {
+
+         RlProduct productModel = productRepository.findById(lastVisitedProductId).orElseThrow(
+                 () -> IdNotFoundException.builder()
+                                          .message("El producto con el ID: " + lastVisitedProductId+ " no existe.")
+                                          .build());
+
+         ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
+         return productDTO;
+      } else {
+
+         RlProduct dailyOfferProduct = productRepository.findDailyOffer();
+
+         ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(dailyOfferProduct);
+         return productDTO;
+      }
    }
 
 }
