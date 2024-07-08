@@ -2,6 +2,7 @@ package com.demo.apiproducts.service;
 
 import static java.lang.Long.parseLong;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
+import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.mapper.RlProductImageMapper;
 import com.demo.apiproducts.mapper.RlProductMapper;
@@ -62,23 +63,33 @@ public class RlProductService {
       return productDTO;
    }
 
-   public ResponseProductByIdDTO getDailyOfferOrLastUserProduct(String userId) {
+   public ResponseGetOfferOrProductDTO getDailyOfferOrLastUserProduct(String userId) {
       Long userIdLong = Long.parseLong(userId);
       Long lastVisitedProductId = productRepository.findLastVisitedProductId(userIdLong);
+
       if (lastVisitedProductId != null) {
          RlProduct productModel = productRepository.findById(lastVisitedProductId).orElseThrow(
                  () -> IdNotFoundException.builder()
-                                          .message("El producto con el ID: " + lastVisitedProductId+ " no existe.")
+                                          .message("El producto con el ID: " + lastVisitedProductId + " no existe.")
                                           .build());
-         ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
-         return productDTO;
+         return ResponseGetOfferOrProductDTO.builder()
+                                            .idProduct(productModel.getId())
+                                            .name(productModel.getName())
+                                            .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
+                                            .currency(productModel.getCurrency())
+                                            .price(productModel.getPrice())
+                                            .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
+                                            .isFavorite(false)
+                                            .isDailyOffer(false)
+                                            .description(productModel.getDescription())
+                                            .build();
       } else {
          RlProduct dailyOfferProduct = productRepository.findDailyOffer();
-         ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(dailyOfferProduct);
-         return productDTO;
+         ResponseGetOfferOrProductDTO offerOrProductDTO = productMapper.toResponseGetOfferOrProductDTO(dailyOfferProduct);
+         offerOrProductDTO.setDailyOffer(true);
+         return offerOrProductDTO;
       }
    }
-
 }
 
 

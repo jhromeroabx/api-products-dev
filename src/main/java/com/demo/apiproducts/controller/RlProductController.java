@@ -1,5 +1,6 @@
 package com.demo.apiproducts.controller;
 
+import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.request.RequestProductDailyofferDTO;
 import com.demo.apiproducts.service.RlProductService;
@@ -37,7 +38,7 @@ public class RlProductController {
    }
 
    @GetMapping("/products/daily-offer")
-   public ResponseEntity<ResponseProductByIdDTO> getDailyOffer(@AuthenticationPrincipal User user) {
+   public ResponseEntity<ResponseGetOfferOrProductDTO> getDailyOffer(@AuthenticationPrincipal User user) {
 
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getDailyOfferOrLastUserProduct(user.getUsername()));
 
