@@ -21,6 +21,5 @@ public interface RlProductMapper {
    @Mapping(target = "isFavorite", ignore = true)
    @Mapping(target = "isDailyOffer", ignore = true)
    ResponseGetOfferOrProductDTO toResponseGetOfferOrProductDTO(RlProduct product);
-
 }
 
