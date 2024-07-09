@@ -69,7 +69,7 @@ public class RlProductService {
    }
 
    @Transactional
-   public ResponseProductByIdDTO putDailyOffer(String userId,Long idProduct) {
+   public ResponseProductByIdDTO putDailyOffer(Long idProduct) {
       productRepository.deactivateCurrentDailyOffer();
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
