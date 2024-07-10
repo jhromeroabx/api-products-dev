@@ -39,10 +39,10 @@ create table rl_product_image
 ALTER TABLE rl_product  ADD COLUMN daily_offer BOOLEAN DEFAULT FALSE;
 CREATE UNIQUE INDEX unique_daily_offer ON rl_products(daily_offer) WHERE daily_offer IS TRUE;
 
-
-CREATE TABLE rl_product_colors (
-    id_product_color SERIAL PRIMARY KEY,
+CREATE TABLE last_user_product (
+    id_last_user_product SERIAL PRIMARY KEY,
+    id_user INT not NULL,
     id_rl_product INT NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (id_rl_product) REFERENCES rl_product(id_rl_product)
 );
