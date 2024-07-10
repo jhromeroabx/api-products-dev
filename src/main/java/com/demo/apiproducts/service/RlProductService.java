@@ -7,6 +7,7 @@ import com.demo.apiproducts.dtos.request.RequestCreateProductImage;
 import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseGetAllProductsDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
+import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.exception.MultipleMainImagesException;
@@ -82,6 +83,43 @@ public class RlProductService {
       return productDTO;
    }
 
+   public ResponseGetOfferOrProductDTO getDailyOfferOrLastUserProduct(String userId) {
+      Long userIdLong = Long.parseLong(userId);
+      Long lastVisitedProductId = productRepository.findLastVisitedProductId(userIdLong);
+      if (lastVisitedProductId != null) {
+         RlProduct productModel = productRepository.findById(lastVisitedProductId).orElseThrow(
+                 () -> IdNotFoundException.builder()
+                                          .message("El producto con el ID: " + lastVisitedProductId + " no existe.")
+                                          .build());
+          ResponseGetOfferOrProductDTO lasUserProductDTO = ResponseGetOfferOrProductDTO.builder()
+                                            .idProduct(productModel.getId())
+                                            .name(productModel.getName())
+                                            .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
+                                            .currency(productModel.getCurrency())
+                                            .price(productModel.getPrice())
+                                            .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
+                                            .isFavorite(false)
+                                            .isDailyOffer(false)
+                                            .description(productModel.getDescription())
+                                            .build();
+         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong , lastVisitedProductId))) {
+            lasUserProductDTO.setFavorite(true);
+         }
+
+         return  lasUserProductDTO;
+
+      } else {
+         RlProduct dailyOfferProduct = productRepository.findDailyOffer();
+         ResponseGetOfferOrProductDTO dailyOfferDTO = productMapper.toResponseGetOfferOrProductDTO(dailyOfferProduct);
+         dailyOfferDTO.setDailyOffer(true);
+         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong , lastVisitedProductId))) {
+            dailyOfferDTO.setFavorite(true);
+         }
+         return dailyOfferDTO;
+      }
+   }
+
+
    public ResponseCreateProduct createProductDTO(RequestCreateProduct requestCreateProduct) {
       RlProductType rlProductType = productTypeRepository.findById(requestCreateProduct.getIdType()).orElseThrow(
               () -> IdNotFoundException.builder()
@@ -143,7 +181,5 @@ public class RlProductService {
                                       .products(products)
                                       .build();
 
-
    }
-
 }
