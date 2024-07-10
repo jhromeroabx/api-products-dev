@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionErrorHandler {
 
    @ExceptionHandler(MultipleMainImagesException.class)
-   public ResponseEntity <ErrorDTO> MultipleMainImagesExceptionHandler(MultipleMainImagesException e) {
+   public ResponseEntity <ErrorDTO> multipleMainImagesExceptionHandler(MultipleMainImagesException e) {
       log.error("Multiple Main Images", e);
       ErrorDTO error = ErrorDTO
               .builder()
@@ -30,7 +30,7 @@ public class GlobalExceptionErrorHandler {
    }
 
    @ExceptionHandler(NoMainImageException.class)
-   public ResponseEntity <ErrorDTO> NoMainImageExceptionHandler(NoMainImageException e) {
+   public ResponseEntity <ErrorDTO> noMainImageExceptionHandler(NoMainImageException e) {
       log.error("No Main Image", e);
       ErrorDTO error = ErrorDTO
               .builder()
@@ -42,7 +42,7 @@ public class GlobalExceptionErrorHandler {
    }
 
    @ExceptionHandler(IdNotFoundException.class)
-   public ResponseEntity <ErrorDTO> IdNotFoundExceptionHandler(IdNotFoundException e) {
+   public ResponseEntity <ErrorDTO> idNotFoundExceptionHandler(IdNotFoundException e) {
       log.error("Id Not Found", e);
       ErrorDTO errorDTO = ErrorDTO
               .builder()
@@ -82,7 +82,7 @@ public class GlobalExceptionErrorHandler {
    }
 
    @ExceptionHandler(MainImageNotFoundException.class)
-   public ResponseEntity <ErrorDTO> MainImageNotFoundExceptionHandler(MainImageNotFoundException e) {
+   public ResponseEntity <ErrorDTO> mainImageNotFoundExceptionHandler(MainImageNotFoundException e) {
       log.error("Main image in DB not found", e);
       ErrorDTO errorDTO = ErrorDTO
               .builder()
