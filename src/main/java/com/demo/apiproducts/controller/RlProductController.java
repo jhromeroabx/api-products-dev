@@ -53,7 +53,7 @@ public class RlProductController {
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.createProductDTO(requestHighProduct));
    }
 
-   @PostMapping("/products/{idProduct}/favorite")
+   @PutMapping("/products/{idProduct}/favorite")
    public ResponseEntity <Void> addAndRemoveFavoriteProduct(@Valid @PathVariable Long idProduct,
                                                             @AuthenticationPrincipal User user) {
       userFavoriteProductService.addAndRemoveFavoriteProduct(idProduct, user.getUsername());

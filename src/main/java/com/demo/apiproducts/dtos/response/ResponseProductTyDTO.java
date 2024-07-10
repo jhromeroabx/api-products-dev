@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ResponseProductTyDTO implements Serializable {
 
-   private Integer idType;
+   private Integer idProductType;
    private String descripcion;
 
 }
