@@ -8,7 +8,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {RlProductMapper.class})
+@Mapper(componentModel = "spring")
 public interface RlProductImageMapper {
 
    @Mapping(source = "providerLink", target = "link")

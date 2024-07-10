@@ -20,6 +20,7 @@ public class ResponseCreateProduct implements Serializable {
    private Character currency;
    private Double price;
    private List <ResponseProductImageDTO> images;
+   private List <ResponseProductColorDTO> colors;
    @JsonProperty("isFavorite")
    private boolean isFavorite = false;
    private String description;

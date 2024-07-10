@@ -3,19 +3,22 @@ package com.demo.apiproducts.service;
 import static java.lang.Long.parseLong;
 
 import com.demo.apiproducts.dtos.request.RequestCreateProduct;
+import com.demo.apiproducts.dtos.request.RequestCreateProductColor;
 import com.demo.apiproducts.dtos.request.RequestCreateProductImage;
 import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseGetAllProductsDTO;
-import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
+import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.exception.MultipleMainImagesException;
 import com.demo.apiproducts.exception.NoMainImageException;
+import com.demo.apiproducts.mapper.RlProductColorMapper;
 import com.demo.apiproducts.mapper.RlProductImageMapper;
 import com.demo.apiproducts.mapper.RlProductMapper;
 import com.demo.apiproducts.mapper.RlProductTypeMapper;
 import com.demo.apiproducts.model.RlProduct;
+import com.demo.apiproducts.model.RlProductColor;
 import com.demo.apiproducts.model.RlProductImage;
 import com.demo.apiproducts.model.RlProductType;
 import com.demo.apiproducts.repository.ProductRepository;
@@ -43,6 +46,7 @@ public class RlProductService {
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final RlProductImageMapper productImageMapper;
    private final RlProductMapper productMapper;
+   private final RlProductColorMapper productColorMapper;
 
    public ResponseProductByIdDTO getProductDTOById(String userId, Long idProduct) {
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
@@ -91,28 +95,28 @@ public class RlProductService {
                  () -> IdNotFoundException.builder()
                                           .message("El producto con el ID: " + lastVisitedProductId + " no existe.")
                                           .build());
-          ResponseGetOfferOrProductDTO lasUserProductDTO = ResponseGetOfferOrProductDTO.builder()
-                                            .idProduct(productModel.getId())
-                                            .name(productModel.getName())
-                                            .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
-                                            .currency(productModel.getCurrency())
-                                            .price(productModel.getPrice())
-                                            .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
-                                            .isFavorite(false)
-                                            .isDailyOffer(false)
-                                            .description(productModel.getDescription())
-                                            .build();
-         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong , lastVisitedProductId))) {
+         ResponseGetOfferOrProductDTO lasUserProductDTO = ResponseGetOfferOrProductDTO.builder()
+                                                                                      .idProduct(productModel.getId())
+                                                                                      .name(productModel.getName())
+                                                                                      .productType(productTypeMapper.toResponseProductTyDTO(productModel.getProductType()))
+                                                                                      .currency(productModel.getCurrency())
+                                                                                      .price(productModel.getPrice())
+                                                                                      .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
+                                                                                      .isFavorite(false)
+                                                                                      .isDailyOffer(false)
+                                                                                      .description(productModel.getDescription())
+                                                                                      .build();
+         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong, lastVisitedProductId))) {
             lasUserProductDTO.setFavorite(true);
          }
 
-         return  lasUserProductDTO;
+         return lasUserProductDTO;
 
       } else {
          RlProduct dailyOfferProduct = productRepository.findDailyOffer();
          ResponseGetOfferOrProductDTO dailyOfferDTO = productMapper.toResponseGetOfferOrProductDTO(dailyOfferProduct);
          dailyOfferDTO.setDailyOffer(true);
-         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong , lastVisitedProductId))) {
+         if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong, lastVisitedProductId))) {
             dailyOfferDTO.setFavorite(true);
          }
          return dailyOfferDTO;
@@ -121,9 +125,9 @@ public class RlProductService {
 
 
    public ResponseCreateProduct createProductDTO(RequestCreateProduct requestCreateProduct) {
-      RlProductType rlProductType = productTypeRepository.findById(requestCreateProduct.getIdType()).orElseThrow(
+      RlProductType rlProductType = productTypeRepository.findById(requestCreateProduct.getIdProductType()).orElseThrow(
               () -> IdNotFoundException.builder()
-                                       .message("The product with the ID: " + requestCreateProduct.getIdType() + " does not exist.")
+                                       .message("The product with the ID: " + requestCreateProduct.getIdProductType() + " does not exist.")
                                        .build());
       if (rlProductType.getDeletedAt() != null) {
          throw new IdNotFoundException("id Not Found Exception");
@@ -149,6 +153,15 @@ public class RlProductService {
          rlProductImage.setProduct(rlProduct);
          images.add(rlProductImage);
       }
+
+      List <RlProductColor> colors = new ArrayList <>();
+      for (RequestCreateProductColor requestCreateProductColor : requestCreateProduct.getColors()) {
+         RlProductColor rlProductColor = productColorMapper.toRlProductColor(requestCreateProductColor);
+         rlProductColor.setProduct(rlProduct);
+         colors.add(rlProductColor);
+      }
+      rlProduct.setProductType(rlProductType);
+      rlProduct.setProductColors(colors);
       rlProduct.setProductImages(images);
       productRepository.save(rlProduct);
 
