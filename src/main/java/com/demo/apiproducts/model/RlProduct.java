@@ -51,4 +51,6 @@ public class RlProduct {
    private RlProductType productType;
    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
    private List <RlProductImage> productImages;
+   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+   private List <RlProductColor> productColors;
 }

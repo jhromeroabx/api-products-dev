@@ -1,6 +1,7 @@
 package com.demo.apiproducts.handler;
 
 import com.demo.apiproducts.dtos.response.ErrorDTO;
+import com.demo.apiproducts.exception.ColorNotFoundException;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.exception.MainImageNotFoundException;
 import com.demo.apiproducts.exception.MultipleMainImagesException;
@@ -88,6 +89,18 @@ public class GlobalExceptionErrorHandler {
               .builder()
               .message("Main Image Not Found")
               .code("MAIN_IMAGE_NOT_FOUND")
+              .status(HttpStatus.NOT_FOUND.value())
+              .build();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
+   }
+
+   @ExceptionHandler(ColorNotFoundException.class)
+   public ResponseEntity <ErrorDTO> colorNotFoundExceptionHandler(ColorNotFoundException e) {
+      log.error("Color not found", e);
+      ErrorDTO errorDTO = ErrorDTO
+              .builder()
+              .message("Color Not Found")
+              .code("COLOR_NOT_FOUND")
               .status(HttpStatus.NOT_FOUND.value())
               .build();
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);

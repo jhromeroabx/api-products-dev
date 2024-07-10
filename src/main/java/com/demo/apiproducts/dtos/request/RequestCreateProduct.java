@@ -17,7 +17,7 @@ public class RequestCreateProduct implements Serializable {
    @NotBlank
    private String name;
    @NotNull
-   private Long idType;
+   private Long idProductType;
    @NotBlank
    private Character currency;
    @NotNull
@@ -28,4 +28,6 @@ public class RequestCreateProduct implements Serializable {
    private String largeDescription;
    @NotNull
    private List <RequestCreateProductImage> images;
+   @NotNull
+   private List <RequestCreateProductColor> colors;
 }
