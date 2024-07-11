@@ -202,7 +202,7 @@ public class RlProductService {
 
    }
 
-   public ResponseUpdateGetproductColorsDTO getColors(Long idProduct) {
+   public ResponseUpdateGetproductColorsDTO getProductColors(Long idProduct) {
       List<RlProductColor> rlProductColorModels = productColorRepository.findByProductId(idProduct);
       if (rlProductColorModels.isEmpty()) {
          throw new IdNotFoundException("The product with the ID: " + idProduct + " does not have any colors.");
