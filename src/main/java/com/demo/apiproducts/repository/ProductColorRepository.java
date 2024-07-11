@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductColorRepository extends JpaRepository <RlProductColor, Long>, JpaSpecificationExecutor <RlProductColor> {
+
    List<RlProductColor> findByProductId(Long productId);
+
 }
