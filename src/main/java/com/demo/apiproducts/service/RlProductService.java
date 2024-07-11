@@ -8,6 +8,7 @@ import com.demo.apiproducts.dtos.request.RequestCreateProductImage;
 import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseGetAllProductsDTO;
 import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
+import com.demo.apiproducts.dtos.response.ResponseGetproductColorsDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
@@ -21,6 +22,7 @@ import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.model.RlProductColor;
 import com.demo.apiproducts.model.RlProductImage;
 import com.demo.apiproducts.model.RlProductType;
+import com.demo.apiproducts.repository.ProductColorRepository;
 import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.ProductTypeRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
@@ -46,7 +48,8 @@ public class RlProductService {
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final RlProductImageMapper productImageMapper;
    private final RlProductMapper productMapper;
-   private final RlProductColorMapper productColorMapper;
+   private  RlProductColorMapper productColorMapper;
+
 
    public ResponseProductByIdDTO getProductDTOById(String userId, Long idProduct) {
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(

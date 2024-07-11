@@ -5,6 +5,7 @@ import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.dtos.request.RequestCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseGetAllProductsDTO;
+import com.demo.apiproducts.dtos.response.ResponseGetproductColorsDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.request.RequestProductDailyofferDTO;
 import com.demo.apiproducts.service.RlProductService;
@@ -79,5 +80,4 @@ public class RlProductController {
 
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getAllProductsDTO(idProductType, productName, onlyFavorite, page, size, user.getUsername()));
    }
-
 }
