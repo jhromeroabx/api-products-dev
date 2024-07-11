@@ -2,6 +2,7 @@ package com.demo.apiproducts.mapper;
 
 import com.demo.apiproducts.dtos.request.RequestCreateProductColor;
 import com.demo.apiproducts.dtos.response.ResponseGetproductColorsDTO;
+import com.demo.apiproducts.dtos.response.ResponseUpdateGetproductColorsDTO;
 import com.demo.apiproducts.exception.ColorNotFoundException;
 import com.demo.apiproducts.model.RlProductColor;
 import java.util.List;
@@ -26,6 +27,8 @@ public interface RlProductColorMapper {
 
    @Mapping(source = "id", target = "id")
    @Mapping(source = "description", target = "description")
-   ResponseGetproductColorsDTO toColors(ResponseGetproductColorsDTO responseGetproductColorsDTO);
+   ResponseGetproductColorsDTO toColors(RlProductColor rlProductColor);
+
+   List<ResponseGetproductColorsDTO> toColorsList(List<RlProductColor> rlProductColor);
 
 }

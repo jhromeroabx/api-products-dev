@@ -1,7 +1,7 @@
 package com.demo.apiproducts.dtos.response;
 
-
 import java.io.Serializable;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,13 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseGetproductColorsDTO implements Serializable {
-
-   private Long id;
-   private String description;
-
+public class ResponseUpdateGetproductColorsDTO implements Serializable {
+   private List <ResponseGetproductColorsDTO> colors;
 }
-
-
-
-

@@ -11,6 +11,7 @@ import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.dtos.response.ResponseGetproductColorsDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductDTO;
+import com.demo.apiproducts.dtos.response.ResponseUpdateGetproductColorsDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.exception.MultipleMainImagesException;
 import com.demo.apiproducts.exception.NoMainImageException;
@@ -49,6 +50,8 @@ public class RlProductService {
    private final RlProductImageMapper productImageMapper;
    private final RlProductMapper productMapper;
    private  RlProductColorMapper productColorMapper;
+   private final ProductColorRepository productColorRepository;
+   private final RlProductColorMapper rlProductColorMapper;
 
 
    public ResponseProductByIdDTO getProductDTOById(String userId, Long idProduct) {
@@ -197,5 +200,17 @@ public class RlProductService {
                                       .products(products)
                                       .build();
 
+   }
+
+   public ResponseUpdateGetproductColorsDTO getColors(Long idProduct) {
+      List<RlProductColor> rlProductColorModels = productColorRepository.findByProductId(idProduct);
+      if (rlProductColorModels.isEmpty()) {
+         throw new IdNotFoundException("The product with the ID: " + idProduct + " does not have any colors.");
+      }
+      List<ResponseGetproductColorsDTO> colorsDTOList = rlProductColorMapper.toColorsList(rlProductColorModels);
+
+      return ResponseUpdateGetproductColorsDTO.builder()
+                                              .colors(colorsDTOList)
+                                              .build();
    }
 }

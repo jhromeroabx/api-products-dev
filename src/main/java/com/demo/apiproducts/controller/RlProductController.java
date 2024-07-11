@@ -7,6 +7,7 @@ import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseGetAllProductsDTO;
 import com.demo.apiproducts.dtos.response.ResponseGetproductColorsDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
+import com.demo.apiproducts.dtos.response.ResponseUpdateGetproductColorsDTO;
 import com.demo.apiproducts.dtos.response.request.RequestProductDailyofferDTO;
 import com.demo.apiproducts.service.RlProductService;
 import com.demo.apiproducts.service.UserFavoriteProductService;
@@ -80,4 +81,10 @@ public class RlProductController {
 
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getAllProductsDTO(idProductType, productName, onlyFavorite, page, size, user.getUsername()));
    }
+
+   @GetMapping("/products/{idProduct}/colors")
+   public ResponseEntity<ResponseUpdateGetproductColorsDTO> getColors(@PathVariable Long idProduct) {
+      return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getColors(idProduct));
+   }
+
 }
