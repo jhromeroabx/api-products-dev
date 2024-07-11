@@ -30,5 +30,4 @@ public interface RlProductColorMapper {
    ResponseGetproductColorsDTO toColors(RlProductColor rlProductColor);
 
    List<ResponseGetproductColorsDTO> toColorsList(List<RlProductColor> rlProductColor);
-
 }

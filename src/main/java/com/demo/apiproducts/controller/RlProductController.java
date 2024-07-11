@@ -85,5 +85,4 @@ public class RlProductController {
    public ResponseEntity<ResponseUpdateGetproductColorsDTO> getColors(@PathVariable Long idProduct) {
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getProductColors(idProduct));
    }
-
 }
