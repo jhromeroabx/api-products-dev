@@ -20,7 +20,7 @@ public class RlProductColor {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "id_rl_product_color")
+   @Column(name = "id_product_color")
    private Long id;
    @Column(name = "description")
    private String description;
