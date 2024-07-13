@@ -16,7 +16,7 @@ public interface UserFavoriteProductRepository extends JpaRepository <UserFavori
    @Query("SELECT p FROM UserFavoriteProduct p WHERE p.idUser = :idUser AND p.rlProduct.id = :idProduct AND p.deletedAt IS NULL")
    UserFavoriteProduct findByUserIdAndIdProduct(Long idUser, Long idProduct);
 
-   @Query("SELECT p.rlProduct.id FROM UserFavoriteProduct p WHERE p.idUser = :idUser")
+   @Query("SELECT p.rlProduct.id FROM UserFavoriteProduct p WHERE p.idUser = :idUser AND p.deletedAt IS NULL")
    List <Long> findFavoriteProductIdsByUserId(@Param("idUser") Long idUser);
 
 }
