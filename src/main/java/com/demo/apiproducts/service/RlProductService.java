@@ -85,7 +85,7 @@ public class RlProductService {
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
-      if (!productModel.getDailyOffer()) {
+      if (productModel.getDailyOffer() == null || !productModel.getDailyOffer()) {
          productRepository.updateDailyOfferById(idProduct, true);
       }
       ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
@@ -130,24 +130,15 @@ public class RlProductService {
    }
 
 
-   @Transactional
    public ResponseCreateProduct createProductDTO(RequestCreateProduct requestCreateProduct) {
-      if (requestCreateProduct == null) {
-         throw new IllegalArgumentException("RequestCreateProduct cannot be null");
-      }
 
-      if (requestCreateProduct.getIdProductType() == null) {
-         throw new IllegalArgumentException("The idProductType must not be null");
-      }
+      RlProductType rlProductType = productTypeRepository.findById(requestCreateProduct.getIdProductType()).orElseThrow(
+              () -> IdNotFoundException
+                      .builder()
+                      .message("The product type with the ID: " + requestCreateProduct.getIdProductType() + " does not exist.")
+                      .build());
 
-      RlProductType rlProductType = productTypeRepository.findById(requestCreateProduct.getIdProductType())
-                                                         .orElseThrow(() -> new IdNotFoundException("The product type with the ID: " + requestCreateProduct.getIdProductType() + " does not exist."));
-
-      if (rlProductType.getDeletedAt() != null) {
-         throw new IdNotFoundException("The product type has been deleted.");
-      }
-
-      List<RequestCreateProductImage> productImages = requestCreateProduct.getImages();
+      List <RequestCreateProductImage> productImages = requestCreateProduct.getImages();
       long principalCount = productImages.stream()
                                          .filter(RequestCreateProductImage::getPrincipal)
                                          .count();
@@ -160,14 +151,14 @@ public class RlProductService {
 
       RlProduct rlProduct = productMapper.toModel(requestCreateProduct);
 
-      List<RlProductImage> images = new ArrayList<>();
+      List <RlProductImage> images = new ArrayList <>();
       for (RequestCreateProductImage requestProductImage : productImages) {
          RlProductImage rlProductImage = productImageMapper.toModel(requestProductImage);
          rlProductImage.setProduct(rlProduct);
          images.add(rlProductImage);
       }
 
-      List<RlProductColor> colors = new ArrayList<>();
+      List <RlProductColor> colors = new ArrayList <>();
       for (RequestCreateProductColor requestProductColor : requestCreateProduct.getColors()) {
          RlProductColor rlProductColor = productColorMapper.toRlProductColor(requestProductColor);
          rlProductColor.setProduct(rlProduct);
@@ -177,6 +168,7 @@ public class RlProductService {
       rlProduct.setProductType(rlProductType);
       rlProduct.setProductColors(colors);
       rlProduct.setProductImages(images);
+      rlProduct.setDailyOffer(false);
       productRepository.save(rlProduct);
 
       ResponseCreateProduct responseCreateProduct = productMapper.toResponseCreateProduct(rlProduct);
@@ -212,11 +204,11 @@ public class RlProductService {
    }
 
    public ResponseUpdateGetproductColorsDTO getProductColors(Long idProduct) {
-      List<RlProductColor> rlProductColorModels = productColorRepository.findByProductId(idProduct);
+      List <RlProductColor> rlProductColorModels = productColorRepository.findByProductId(idProduct);
       if (rlProductColorModels.isEmpty()) {
          throw new IdNotFoundException("The product with the ID: " + idProduct + " does not have any colors.");
       }
-      List<ResponseGetproductColorsDTO> colorsDTOList = rlProductColorMapper.toColorsList(rlProductColorModels);
+      List <ResponseGetproductColorsDTO> colorsDTOList = rlProductColorMapper.toColorsList(rlProductColorModels);
 
       return ResponseUpdateGetproductColorsDTO.builder()
                                               .colors(colorsDTOList)
