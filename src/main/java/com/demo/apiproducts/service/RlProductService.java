@@ -49,7 +49,7 @@ public class RlProductService {
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final RlProductImageMapper productImageMapper;
    private final RlProductMapper productMapper;
-   private  RlProductColorMapper productColorMapper;
+   private final RlProductColorMapper productColorMapper;
    private final ProductColorRepository productColorRepository;
    private final RlProductColorMapper rlProductColorMapper;
 
@@ -130,20 +130,27 @@ public class RlProductService {
    }
 
 
+   @Transactional
    public ResponseCreateProduct createProductDTO(RequestCreateProduct requestCreateProduct) {
-      RlProductType rlProductType = productTypeRepository.findById(requestCreateProduct.getIdProductType()).orElseThrow(
-              () -> IdNotFoundException.builder()
-                                       .message("The product with the ID: " + requestCreateProduct.getIdProductType() + " does not exist.")
-                                       .build());
-      if (rlProductType.getDeletedAt() != null) {
-         throw new IdNotFoundException("id Not Found Exception");
+      if (requestCreateProduct == null) {
+         throw new IllegalArgumentException("RequestCreateProduct cannot be null");
       }
 
-      List <RequestCreateProductImage> productImages = requestCreateProduct.getImages();
+      if (requestCreateProduct.getIdProductType() == null) {
+         throw new IllegalArgumentException("The idProductType must not be null");
+      }
 
-      var principalCount = productImages.stream()
-                                        .filter(RequestCreateProductImage::getPrincipal)
-                                        .count();
+      RlProductType rlProductType = productTypeRepository.findById(requestCreateProduct.getIdProductType())
+                                                         .orElseThrow(() -> new IdNotFoundException("The product type with the ID: " + requestCreateProduct.getIdProductType() + " does not exist."));
+
+      if (rlProductType.getDeletedAt() != null) {
+         throw new IdNotFoundException("The product type has been deleted.");
+      }
+
+      List<RequestCreateProductImage> productImages = requestCreateProduct.getImages();
+      long principalCount = productImages.stream()
+                                         .filter(RequestCreateProductImage::getPrincipal)
+                                         .count();
 
       if (principalCount > 1) {
          throw new MultipleMainImagesException("Only one image can be main.");
@@ -153,19 +160,20 @@ public class RlProductService {
 
       RlProduct rlProduct = productMapper.toModel(requestCreateProduct);
 
-      List <RlProductImage> images = new ArrayList <>();
-      for (RequestCreateProductImage requestHighProductImage : requestCreateProduct.getImages()) {
-         RlProductImage rlProductImage = productImageMapper.toModel(requestHighProductImage);
+      List<RlProductImage> images = new ArrayList<>();
+      for (RequestCreateProductImage requestProductImage : productImages) {
+         RlProductImage rlProductImage = productImageMapper.toModel(requestProductImage);
          rlProductImage.setProduct(rlProduct);
          images.add(rlProductImage);
       }
 
-      List <RlProductColor> colors = new ArrayList <>();
-      for (RequestCreateProductColor requestCreateProductColor : requestCreateProduct.getColors()) {
-         RlProductColor rlProductColor = productColorMapper.toRlProductColor(requestCreateProductColor);
+      List<RlProductColor> colors = new ArrayList<>();
+      for (RequestCreateProductColor requestProductColor : requestCreateProduct.getColors()) {
+         RlProductColor rlProductColor = productColorMapper.toRlProductColor(requestProductColor);
          rlProductColor.setProduct(rlProduct);
          colors.add(rlProductColor);
       }
+
       rlProduct.setProductType(rlProductType);
       rlProduct.setProductColors(colors);
       rlProduct.setProductImages(images);
@@ -173,6 +181,7 @@ public class RlProductService {
 
       ResponseCreateProduct responseCreateProduct = productMapper.toResponseCreateProduct(rlProduct);
       responseCreateProduct.setFavorite(false);
+
       return responseCreateProduct;
    }
 
