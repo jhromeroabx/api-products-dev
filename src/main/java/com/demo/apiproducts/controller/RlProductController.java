@@ -1,11 +1,12 @@
 package com.demo.apiproducts.controller;
 
 
-import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.dtos.request.RequestCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseGetAllProductsDTO;
+import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
+import com.demo.apiproducts.dtos.response.ResponseSimilarProductsDTO;
 import com.demo.apiproducts.dtos.response.ResponseUpdateGetproductColorsDTO;
 import com.demo.apiproducts.dtos.response.request.RequestProductDailyofferDTO;
 import com.demo.apiproducts.service.RlProductService;
@@ -44,14 +45,14 @@ public class RlProductController {
    }
 
    @PutMapping("/products/daily-offer")
-   public ResponseEntity<ResponseProductByIdDTO> putDailyOffer(@Valid @RequestBody RequestProductDailyofferDTO requestProductDailyofferDTO ) {
+   public ResponseEntity <ResponseProductByIdDTO> putDailyOffer(@Valid @RequestBody RequestProductDailyofferDTO requestProductDailyofferDTO) {
 
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.putDailyOffer(requestProductDailyofferDTO.getIdProduct()));
 
    }
 
    @GetMapping("/products/daily-offer")
-   public ResponseEntity<ResponseGetOfferOrProductDTO> getDailyOffer(@AuthenticationPrincipal User user) {
+   public ResponseEntity <ResponseGetOfferOrProductDTO> getDailyOffer(@AuthenticationPrincipal User user) {
 
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getDailyOfferOrLastUserProduct(user.getUsername()));
 
@@ -71,7 +72,7 @@ public class RlProductController {
    }
 
    @GetMapping("/products")
-   public ResponseEntity <ResponseGetAllProductsDTO> getAllProducts(@Valid @RequestParam(value = "idProductType", required = false) Integer idProductType,
+   public ResponseEntity <ResponseGetAllProductsDTO> getAllProducts(@Valid @RequestParam(value = "idProductType", required = false) Long idProductType,
                                                                     @Valid @RequestParam(value = "productName", required = false) String productName,
                                                                     @Valid @RequestParam(value = "onlyFavorite", defaultValue = "false") boolean onlyFavorite,
                                                                     @Valid @RequestParam(value = "page", defaultValue = "1") @Min(value = 1) int page,
@@ -82,7 +83,16 @@ public class RlProductController {
    }
 
    @GetMapping("/products/{idProduct}/colors")
-   public ResponseEntity<ResponseUpdateGetproductColorsDTO> getColors(@PathVariable Long idProduct) {
+   public ResponseEntity <ResponseUpdateGetproductColorsDTO> getColors(@PathVariable Long idProduct) {
       return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getProductColors(idProduct));
+   }
+
+   @GetMapping("/products/{idProduct}/similar")
+   public ResponseEntity <ResponseSimilarProductsDTO> getAllSimilarProducts(@Valid @PathVariable Long idProduct,
+                                                                            @Valid @RequestParam(value = "page", defaultValue = "1") @Min(value = 1) int page,
+                                                                            @Valid @RequestParam(value = "size", defaultValue = "10") @Min(value = 1) @Max(value = 50) int size,
+                                                                            @AuthenticationPrincipal User user) {
+
+      return ResponseEntity.status(HttpStatus.OK).body(rlProductService.getSimilarProducts(idProduct, page, size, user.getUsername()));
    }
 }

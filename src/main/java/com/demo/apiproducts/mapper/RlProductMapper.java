@@ -1,6 +1,7 @@
 package com.demo.apiproducts.mapper;
 
 import com.demo.apiproducts.dtos.request.RequestCreateProduct;
+import com.demo.apiproducts.dtos.response.RSimilarProductDTO;
 import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
@@ -51,8 +52,17 @@ public interface RlProductMapper {
    @Mapping(source = "productType", target = "productType")
    @Mapping(source = "currency", target = "currency")
    @Mapping(source = "price", target = "price")
-   @Mapping(source = "productImages", target = "image")
+   @Mapping(source = "productImages", target = "image", qualifiedByName = "toLinks")
    @Mapping(source = "description", target = "description")
    ResponseProductDTO toResponseProductDTO(RlProduct productModel);
+
+   @Mapping(source = "id", target = "idProduct")
+   @Mapping(source = "name", target = "name")
+   @Mapping(source = "productType", target = "productType")
+   @Mapping(source = "currency", target = "currency")
+   @Mapping(source = "price", target = "price")
+   @Mapping(source = "productImages", target = "image", qualifiedByName = "toLinks")
+   @Mapping(source = "description", target = "description")
+   RSimilarProductDTO toRSimilarProductDTO(RlProduct productModel);
 }
 

@@ -7,6 +7,7 @@ import com.demo.apiproducts.model.RlProductImage;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface RlProductImageMapper {
@@ -20,6 +21,7 @@ public interface RlProductImageMapper {
    @Mapping(source = "principal", target = "principal")
    RlProductImage toModel(RequestCreateProductImage requestHighProductImage);
 
+   @Named("toLinks")
    default String toLinks(List <RlProductImage> productImages) {
       return productImages.stream()
                           .filter(RlProductImage::getPrincipal)
