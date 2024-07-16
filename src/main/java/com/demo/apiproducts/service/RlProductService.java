@@ -1,16 +1,19 @@
 package com.demo.apiproducts.service;
 
+import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
 import com.demo.apiproducts.dtos.request.RequestCreateProduct;
 import com.demo.apiproducts.dtos.request.RequestCreateProductColor;
 import com.demo.apiproducts.dtos.request.RequestCreateProductImage;
+import com.demo.apiproducts.dtos.response.RSimilarProductDTO;
 import com.demo.apiproducts.dtos.response.ResponseCreateProduct;
 import com.demo.apiproducts.dtos.response.ResponseGetAllProductsDTO;
 import com.demo.apiproducts.dtos.response.ResponseGetOfferOrProductDTO;
 import com.demo.apiproducts.dtos.response.ResponseGetproductColorsDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductByIdDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductDTO;
+import com.demo.apiproducts.dtos.response.ResponseSimilarProductsDTO;
 import com.demo.apiproducts.dtos.response.ResponseUpdateGetproductColorsDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
 import com.demo.apiproducts.exception.MultipleMainImagesException;
@@ -177,7 +180,7 @@ public class RlProductService {
       return responseCreateProduct;
    }
 
-   public ResponseGetAllProductsDTO getAllProductsDTO(Integer idProductType, String productName, boolean onlyFavorite, Integer page, Integer size, String userId) {
+   public ResponseGetAllProductsDTO getAllProductsDTO(Long idProductType, String productName, boolean onlyFavorite, Integer page, Integer size, String userId) {
       Specification <RlProduct> spec = Specification.where(ProductSpecifications.hasProductType(idProductType))
                                                     .and(ProductSpecifications.hasProductName(productName))
                                                     .and(ProductSpecifications.isFavoriteForUser(userId, onlyFavorite));
@@ -213,5 +216,32 @@ public class RlProductService {
       return ResponseUpdateGetproductColorsDTO.builder()
                                               .colors(colorsDTOList)
                                               .build();
+   }
+
+   public ResponseSimilarProductsDTO getSimilarProducts(Long idProduct, Integer page, Integer size, String userId) {
+      RlProduct rlProduct = productRepository.findById(idProduct).orElseThrow(
+              () -> IdNotFoundException.builder()
+                                       .message("The product with the ID: " + idProduct + " does not exist.")
+                                       .build());
+      Specification <RlProduct> spec = Specification.where(ProductSpecifications.hasProductType(rlProduct.getProductType().getId()));
+
+      Page <RlProduct> productsPage = productRepository.findAll(spec, PageRequest.of(page - 1, size));
+      List <RSimilarProductDTO> products = productsPage.getContent().stream()
+                                                       .map(productMapper::toRSimilarProductDTO)
+                                                       .toList();
+
+      List <Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
+      for (RSimilarProductDTO product : products) {
+         if (favoriteProductIds.contains(product.getIdProduct())) {
+            product.setFavorite(true);
+         }
+      }
+      return ResponseSimilarProductsDTO.builder()
+                                             .page(page)
+                                             .size(size)
+                                             .totalPages(productsPage.getTotalPages())
+                                             .totalProducts(productsPage.getTotalElements())
+                                             .products(products)
+                                             .build();
    }
 }

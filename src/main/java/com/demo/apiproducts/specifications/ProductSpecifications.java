@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecifications {
 
-   public static Specification <RlProduct> hasProductType(Integer idProductType) {
+   public static Specification <RlProduct> hasProductType(Long idProductType) {
       return (root, query, criteriaBuilder) -> {
          if (idProductType == null) {
             return criteriaBuilder.conjunction();
