@@ -1,6 +1,5 @@
 package com.demo.apiproducts.service;
 
-import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
 import com.demo.apiproducts.dtos.request.RequestCreateProduct;
@@ -34,10 +33,7 @@ import com.demo.apiproducts.repository.ProductTypeRepository;
 import com.demo.apiproducts.repository.UserFavoriteProductRepository;
 import com.demo.apiproducts.specifications.ProductSpecifications;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
