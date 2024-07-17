@@ -82,14 +82,14 @@ public class RlProductService {
       Long userIdLong = Long.parseLong(userId);
       RlLastUserProduct lastUserProduct = lastUserProductRepository.findByUserId(userIdLong);
       if (lastUserProduct != null) {
-        lastUserProduct.setDeletedAt(new Date());
-        lastUserProductRepository.save(lastUserProduct);
+         lastUserProduct.setDeletedAt(new Date());
+         lastUserProductRepository.save(lastUserProduct);
       }
       RlLastUserProduct updateLastUserProduct = RlLastUserProduct.builder()
-                                                              .idUser(userIdLong)
-                                                              .rlProduct(productModel)
-                                                              .deletedAt(null)
-                                                              .build();
+                                                                 .idUser(userIdLong)
+                                                                 .rlProduct(productModel)
+                                                                 .deletedAt(null)
+                                                                 .build();
       lastUserProductRepository.save(updateLastUserProduct);
 
       return productDTO;
@@ -251,11 +251,11 @@ public class RlProductService {
          }
       }
       return ResponseSimilarProductsDTO.builder()
-                                             .page(page)
-                                             .size(size)
-                                             .totalPages(productsPage.getTotalPages())
-                                             .totalProducts(productsPage.getTotalElements())
-                                             .products(products)
-                                             .build();
+                                       .page(page)
+                                       .size(size)
+                                       .totalPages(productsPage.getTotalPages())
+                                       .totalProducts(productsPage.getTotalElements())
+                                       .products(products)
+                                       .build();
    }
 }
