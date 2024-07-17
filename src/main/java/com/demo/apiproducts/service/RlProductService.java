@@ -34,6 +34,7 @@ import com.demo.apiproducts.repository.UserFavoriteProductRepository;
 import com.demo.apiproducts.specifications.ProductSpecifications;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +82,8 @@ public class RlProductService {
       Long userIdLong = Long.parseLong(userId);
       RlLastUserProduct lastUserProduct = lastUserProductRepository.findByUserId(userIdLong);
       if (lastUserProduct != null) {
-         lastUserProductRepository.delete(lastUserProduct);
+        lastUserProduct.setDeletedAt(new Date());
+        lastUserProductRepository.save(lastUserProduct);
       }
       RlLastUserProduct updateLastUserProduct = RlLastUserProduct.builder()
                                                               .idUser(userIdLong)

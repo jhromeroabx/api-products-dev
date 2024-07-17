@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LastUserProductRepository extends JpaRepository <RlLastUserProduct, Long> {
 
-   @Query("SELECT l FROM RlLastUserProduct l WHERE l.idUser = :userId")
+   @Query("SELECT l FROM RlLastUserProduct l WHERE l.idUser = :userId AND l.deletedAt IS NULL")
    RlLastUserProduct findByUserId(@Param("userId") Long userId);
 
 }
