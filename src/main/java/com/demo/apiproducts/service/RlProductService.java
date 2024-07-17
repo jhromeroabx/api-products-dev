@@ -1,6 +1,5 @@
 package com.demo.apiproducts.service;
 
-import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
 import com.demo.apiproducts.dtos.request.RequestCreateProduct;
@@ -22,10 +21,12 @@ import com.demo.apiproducts.mapper.RlProductColorMapper;
 import com.demo.apiproducts.mapper.RlProductImageMapper;
 import com.demo.apiproducts.mapper.RlProductMapper;
 import com.demo.apiproducts.mapper.RlProductTypeMapper;
+import com.demo.apiproducts.model.RlLastUserProduct;
 import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.model.RlProductColor;
 import com.demo.apiproducts.model.RlProductImage;
 import com.demo.apiproducts.model.RlProductType;
+import com.demo.apiproducts.repository.LastUserProductRepository;
 import com.demo.apiproducts.repository.ProductColorRepository;
 import com.demo.apiproducts.repository.ProductRepository;
 import com.demo.apiproducts.repository.ProductTypeRepository;
@@ -33,6 +34,7 @@ import com.demo.apiproducts.repository.UserFavoriteProductRepository;
 import com.demo.apiproducts.specifications.ProductSpecifications;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +57,7 @@ public class RlProductService {
    private final RlProductColorMapper productColorMapper;
    private final ProductColorRepository productColorRepository;
    private final RlProductColorMapper rlProductColorMapper;
+   private final LastUserProductRepository lastUserProductRepository;
 
 
    public ResponseProductByIdDTO getProductDTOById(String userId, Long idProduct) {
@@ -62,7 +65,6 @@ public class RlProductService {
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
                                        .build());
-
       ResponseProductByIdDTO productDTO = ResponseProductByIdDTO.builder()
                                                                 .idProduct(productModel.getId())
                                                                 .name(productModel.getName())
@@ -77,6 +79,18 @@ public class RlProductService {
       if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(parseLong(userId), idProduct))) {
          productDTO.setFavorite(true);
       }
+      Long userIdLong = Long.parseLong(userId);
+      RlLastUserProduct lastUserProduct = lastUserProductRepository.findByUserId(userIdLong);
+      if (lastUserProduct != null) {
+         lastUserProduct.setDeletedAt(new Date());
+         lastUserProductRepository.save(lastUserProduct);
+      }
+      RlLastUserProduct updateLastUserProduct = RlLastUserProduct.builder()
+                                                                 .idUser(userIdLong)
+                                                                 .rlProduct(productModel)
+                                                                 .deletedAt(null)
+                                                                 .build();
+      lastUserProductRepository.save(updateLastUserProduct);
 
       return productDTO;
    }
@@ -237,11 +251,11 @@ public class RlProductService {
          }
       }
       return ResponseSimilarProductsDTO.builder()
-                                             .page(page)
-                                             .size(size)
-                                             .totalPages(productsPage.getTotalPages())
-                                             .totalProducts(productsPage.getTotalElements())
-                                             .products(products)
-                                             .build();
+                                       .page(page)
+                                       .size(size)
+                                       .totalPages(productsPage.getTotalPages())
+                                       .totalProducts(productsPage.getTotalElements())
+                                       .products(products)
+                                       .build();
    }
 }
