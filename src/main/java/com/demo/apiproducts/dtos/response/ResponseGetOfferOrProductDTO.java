@@ -20,7 +20,7 @@ public class ResponseGetOfferOrProductDTO implements Serializable {
    private Double price;
    private List <ResponseProductImageDTO> images;
    @JsonProperty("isFavorite")
-   private boolean isFavorite = false;
-   private boolean isDailyOffer = false;
+   private boolean isFavorite;
+   private boolean isDailyOffer;
    private String description;
 }

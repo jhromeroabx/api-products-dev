@@ -22,8 +22,7 @@ public interface RlProductMapper {
    @Mapping(source = "id", target = "idProduct")
    @Mapping(source = "productType", target = "productType")
    @Mapping(source = "productImages", target = "images")
-   @Mapping(target = "isFavorite", ignore = true)
-   @Mapping(target = "isDailyOffer", ignore = true)
+   @Mapping(source = "dailyOffer", target = "isDailyOffer")
    ResponseGetOfferOrProductDTO toResponseGetOfferOrProductDTO(RlProduct product);
 
    @Mapping(source = "name", target = "name")

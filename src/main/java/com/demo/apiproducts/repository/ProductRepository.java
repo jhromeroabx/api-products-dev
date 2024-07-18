@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface ProductRepository extends JpaRepository<RlProduct, Long>, JpaSpecificationExecutor<RlProduct> {
+public interface ProductRepository extends JpaRepository <RlProduct, Long>, JpaSpecificationExecutor <RlProduct> {
 
    @Modifying
    @Query("UPDATE RlProduct p SET p.dailyOffer = false WHERE p.dailyOffer = true")
@@ -20,9 +20,6 @@ public interface ProductRepository extends JpaRepository<RlProduct, Long>, JpaSp
    @Query("UPDATE RlProduct p SET p.dailyOffer = :dailyOffer WHERE p.id = :id")
    void updateDailyOfferById(@Param("id") Long id, @Param("dailyOffer") boolean dailyOffer);
 
-    @Query("SELECT lup.rlProduct.id FROM RlLastUserProduct lup WHERE lup.idUser = :userId")
-    Long findLastVisitedProductId(@Param("userId") Long userId);
-
-    @Query("SELECT p FROM RlProduct p WHERE p.dailyOffer = true")
-    RlProduct findDailyOffer();
+   @Query("SELECT p FROM RlProduct p WHERE p.dailyOffer = true")
+   RlProduct findDailyOffer();
 }
