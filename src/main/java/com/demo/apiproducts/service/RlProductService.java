@@ -112,7 +112,7 @@ public class RlProductService {
 
    public ResponseGetOfferOrProductDTO getDailyOfferOrLastUserProduct(String userId) {
       Long userIdLong = Long.parseLong(userId);
-      Long lastVisitedProductId = productRepository.findLastVisitedProductId(userIdLong);
+      Long lastVisitedProductId = lastUserProductRepository.findLastVisitedProductId(userIdLong);
       if (lastVisitedProductId != null) {
          RlProduct productModel = productRepository.findById(lastVisitedProductId).orElseThrow(
                  () -> IdNotFoundException.builder()
@@ -126,7 +126,7 @@ public class RlProductService {
                                                                                       .price(productModel.getPrice())
                                                                                       .images(productModel.getProductImages().stream().map(productImageMapper::toDTO).toList())
                                                                                       .isFavorite(false)
-                                                                                      .isDailyOffer(false)
+                                                                                      .isDailyOffer(productModel.getDailyOffer())
                                                                                       .description(productModel.getDescription())
                                                                                       .build();
          if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong, lastVisitedProductId))) {
@@ -138,7 +138,6 @@ public class RlProductService {
       } else {
          RlProduct dailyOfferProduct = productRepository.findDailyOffer();
          ResponseGetOfferOrProductDTO dailyOfferDTO = productMapper.toResponseGetOfferOrProductDTO(dailyOfferProduct);
-         dailyOfferDTO.setDailyOffer(true);
          if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong, lastVisitedProductId))) {
             dailyOfferDTO.setFavorite(true);
          }

@@ -12,4 +12,7 @@ public interface LastUserProductRepository extends JpaRepository <RlLastUserProd
    @Query("SELECT l FROM RlLastUserProduct l WHERE l.idUser = :userId AND l.deletedAt IS NULL")
    RlLastUserProduct findByUserId(@Param("userId") Long userId);
 
+   @Query("SELECT p.rlProduct.id FROM RlLastUserProduct p WHERE p.idUser = :idUser AND p.deletedAt IS NULL")
+   Long findLastVisitedProductId(@Param("idUser") Long userId);
+
 }
