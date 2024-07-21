@@ -45,9 +45,9 @@ public class RlProductController {
    }
 
    @PutMapping("/products/daily-offer")
-   public ResponseEntity <ResponseProductByIdDTO> putDailyOffer(@Valid @RequestBody RequestProductDailyofferDTO requestProductDailyofferDTO) {
+   public ResponseEntity <ResponseProductByIdDTO> putDailyOffer( @AuthenticationPrincipal User user,@Valid @RequestBody RequestProductDailyofferDTO requestProductDailyofferDTO) {
 
-      return ResponseEntity.status(HttpStatus.OK).body(rlProductService.putDailyOffer(requestProductDailyofferDTO.getIdProduct()));
+      return ResponseEntity.status(HttpStatus.OK).body(rlProductService.putDailyOffer(user.getUsername(),requestProductDailyofferDTO.getIdProduct()));
 
    }
 

@@ -96,7 +96,8 @@ public class RlProductService {
    }
 
    @Transactional
-   public ResponseProductByIdDTO putDailyOffer(Long idProduct) {
+   public ResponseProductByIdDTO putDailyOffer(String userId,Long idProduct) {
+      Long userIdLong = Long.parseLong(userId);
       productRepository.deactivateCurrentDailyOffer();
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
@@ -105,7 +106,11 @@ public class RlProductService {
       if (productModel.getDailyOffer() == null || !productModel.getDailyOffer()) {
          productRepository.updateDailyOfferById(idProduct, true);
       }
+
       ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
+      if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong, idProduct))) {
+         productDTO.setFavorite(true);
+      }
 
       return productDTO;
    }
