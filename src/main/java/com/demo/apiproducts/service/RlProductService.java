@@ -106,7 +106,6 @@ public class RlProductService {
       if (productModel.getDailyOffer() == null || !productModel.getDailyOffer()) {
          productRepository.updateDailyOfferById(idProduct, true);
       }
-
       ResponseProductByIdDTO productDTO = productMapper.toResponseProductByIdDTO(productModel);
       if (Boolean.TRUE.equals(userFavoriteProductRepository.existsFavoriteProductForUser(userIdLong, idProduct))) {
          productDTO.setFavorite(true);
