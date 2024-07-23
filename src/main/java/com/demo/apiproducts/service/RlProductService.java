@@ -193,9 +193,7 @@ public class RlProductService {
       rlProduct.setProductColors(colors);
       rlProduct.setProductImages(images);
       rlProduct.setDailyOffer(false);
-
       productRepository.save(rlProduct);
-
       ResponseCreateProduct responseCreateProduct = productMapper.toResponseCreateProduct(rlProduct);
       responseCreateProduct.setFavorite(false);
 
