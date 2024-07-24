@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -40,4 +41,14 @@ public class RlProductImage {
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "id_rl_product")
    private RlProduct product;
+
+   @PrePersist
+   public void prePersist() {
+      if (provider != null) {
+         provider = provider.trim();
+      }
+      if (providerLink != null) {
+         providerLink = providerLink.trim();
+      }
+   }
 }

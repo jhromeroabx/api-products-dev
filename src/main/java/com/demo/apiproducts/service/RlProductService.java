@@ -177,20 +177,23 @@ public class RlProductService {
          rlProductImage.setProduct(rlProduct);
          images.add(rlProductImage);
       }
-
       List <RlProductColor> colors = new ArrayList <>();
       for (RequestCreateProductColor requestProductColor : requestCreateProduct.getColors()) {
          RlProductColor rlProductColor = productColorMapper.toRlProductColor(requestProductColor);
          rlProductColor.setProduct(rlProduct);
          colors.add(rlProductColor);
       }
-
+      String nameTrim = requestCreateProduct.getName().trim();
+      String descriptionTrim = requestCreateProduct.getDescription().trim();
+      String largeDescriptionTrim = requestCreateProduct.getLargeDescription().trim();
+      rlProduct.setName(nameTrim);
+      rlProduct.setDescription(descriptionTrim);
+      rlProduct.setLargeDescription(largeDescriptionTrim);
       rlProduct.setProductType(rlProductType);
       rlProduct.setProductColors(colors);
       rlProduct.setProductImages(images);
       rlProduct.setDailyOffer(false);
       productRepository.save(rlProduct);
-
       ResponseCreateProduct responseCreateProduct = productMapper.toResponseCreateProduct(rlProduct);
       responseCreateProduct.setFavorite(false);
 
