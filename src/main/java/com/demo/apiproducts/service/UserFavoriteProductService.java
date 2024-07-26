@@ -2,7 +2,9 @@ package com.demo.apiproducts.service;
 
 import static java.lang.Long.parseLong;
 
+import com.demo.apiproducts.dtos.response.ResponseProductFavDTO;
 import com.demo.apiproducts.exception.IdNotFoundException;
+import com.demo.apiproducts.mapper.RlProductMapper;
 import com.demo.apiproducts.model.RlProduct;
 import com.demo.apiproducts.model.UserFavoriteProduct;
 import com.demo.apiproducts.repository.ProductRepository;
@@ -17,8 +19,9 @@ public class UserFavoriteProductService {
 
    private final UserFavoriteProductRepository userFavoriteProductRepository;
    private final ProductRepository productRepository;
+   private final RlProductMapper productMapper;
 
-   public void addAndRemoveFavoriteProduct(Long idProduct, String userId) {
+   public ResponseProductFavDTO addAndRemoveFavoriteProduct(Long idProduct, String userId) {
       RlProduct rlProduct = productRepository.findById(idProduct).orElseThrow(
               () -> IdNotFoundException.builder()
                                        .message("The product with the ID: " + idProduct + " does not exist.")
@@ -27,6 +30,12 @@ public class UserFavoriteProductService {
          UserFavoriteProduct userFavoriteProduct = userFavoriteProductRepository.findByUserIdAndIdProduct(parseLong(userId), idProduct);
          userFavoriteProduct.setDeletedAt(new Date());
          userFavoriteProductRepository.save(userFavoriteProduct);
+
+         ResponseProductFavDTO responseProductFavDTO = productMapper.toResponseProductFavDTO(rlProduct);
+         responseProductFavDTO.setFavorite(false);
+
+         return responseProductFavDTO;
+
       } else {
          UserFavoriteProduct userFavoriteProduct = UserFavoriteProduct
                  .builder()
@@ -36,5 +45,9 @@ public class UserFavoriteProductService {
 
          userFavoriteProductRepository.save(userFavoriteProduct);
       }
+
+      ResponseProductFavDTO responseProductFavDTO = productMapper.toResponseProductFavDTO(rlProduct);
+      responseProductFavDTO.setFavorite(true);
+      return responseProductFavDTO;
    }
 }
