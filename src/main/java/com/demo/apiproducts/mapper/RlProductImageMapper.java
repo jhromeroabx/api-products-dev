@@ -1,6 +1,7 @@
 package com.demo.apiproducts.mapper;
 
 import com.demo.apiproducts.dtos.request.RequestCreateProductImage;
+import com.demo.apiproducts.dtos.response.ResponseProductFavImageDTO;
 import com.demo.apiproducts.dtos.response.ResponseProductImageDTO;
 import com.demo.apiproducts.exception.MainImageNotFoundException;
 import com.demo.apiproducts.model.RlProductImage;
@@ -31,4 +32,8 @@ public interface RlProductImageMapper {
                                                                        .message("Main image not found")
                                                                        .build());
    }
+
+   @Mapping(source = "providerLink", target = "link")
+   ResponseProductFavImageDTO toResponseProductFavImageDTO(RlProductImage rlProductImage);
+
 }
