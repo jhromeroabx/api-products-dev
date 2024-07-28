@@ -35,7 +35,9 @@ import com.demo.apiproducts.specifications.ProductSpecifications;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -205,22 +207,26 @@ public class RlProductService {
                                                     .and(ProductSpecifications.hasProductName(productName))
                                                     .and(ProductSpecifications.isFavoriteForUser(userId, onlyFavorite));
 
-      Page <RlProduct> productsPage = productRepository.findAll(spec, PageRequest.of(page - 1, size));
-      List <ResponseProductDTO> products = productsPage.getContent().stream()
-                                                       .map(productMapper::toResponseProductDTO)
-                                                       .toList();
+      Page<RlProduct> productsPage = productRepository.findAll(spec, PageRequest.of(page - 1, size));
+      List<ResponseProductDTO> products = productsPage.getContent().stream()
+                                                      .map(productMapper::toResponseProductDTO)
+                                                      .collect(Collectors.toList());
 
-      List <Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
-      for (ResponseProductDTO product : products) {
-         if (favoriteProductIds.contains(product.getIdProduct())) {
+      List<Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
+
+      products.removeIf(product -> {
+         boolean isFavorite = favoriteProductIds.contains(product.getIdProduct());
+         if (isFavorite) {
             product.setFavorite(true);
          }
-      }
+         return !isFavorite;
+      });
+      long totalFilteredProducts = products.size();
       return ResponseGetAllProductsDTO.builder()
                                       .page(page)
                                       .size(size)
                                       .totalPages(productsPage.getTotalPages())
-                                      .totalProducts(productsPage.getTotalElements())
+                                      .totalProducts(totalFilteredProducts)
                                       .products(products)
                                       .build();
 
