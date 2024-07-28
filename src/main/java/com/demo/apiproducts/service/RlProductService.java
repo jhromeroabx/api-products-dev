@@ -35,7 +35,6 @@ import com.demo.apiproducts.specifications.ProductSpecifications;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +97,7 @@ public class RlProductService {
    }
 
    @Transactional
-   public ResponseProductByIdDTO putDailyOffer(String userId,Long idProduct) {
+   public ResponseProductByIdDTO putDailyOffer(String userId, Long idProduct) {
       Long userIdLong = Long.parseLong(userId);
       productRepository.deactivateCurrentDailyOffer();
       RlProduct productModel = productRepository.findById(idProduct).orElseThrow(
@@ -207,20 +206,21 @@ public class RlProductService {
                                                     .and(ProductSpecifications.hasProductName(productName))
                                                     .and(ProductSpecifications.isFavoriteForUser(userId, onlyFavorite));
 
-      Page<RlProduct> productsPage = productRepository.findAll(spec, PageRequest.of(page - 1, size));
-      List<ResponseProductDTO> products = productsPage.getContent().stream()
-                                                      .map(productMapper::toResponseProductDTO)
-                                                      .collect(Collectors.toList());
+      Page <RlProduct> productsPage = productRepository.findAll(spec, PageRequest.of(page - 1, size));
+      List <ResponseProductDTO> products = productsPage.getContent().stream()
+                                                       .map(productMapper::toResponseProductDTO)
+                                                       .collect(Collectors.toList());
 
-      List<Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
-
-      products.removeIf(product -> {
-         boolean isFavorite = favoriteProductIds.contains(product.getIdProduct());
-         if (isFavorite) {
-            product.setFavorite(true);
-         }
-         return !isFavorite;
-      });
+      if (Boolean.TRUE.equals(onlyFavorite)) {
+         List <Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
+         products.removeIf(product -> {
+            boolean isFavorite = favoriteProductIds.contains(product.getIdProduct());
+            if (isFavorite) {
+               product.setFavorite(true);
+            }
+            return !isFavorite;
+         });
+      }
       long totalFilteredProducts = products.size();
       return ResponseGetAllProductsDTO.builder()
                                       .page(page)
