@@ -210,15 +210,22 @@ public class RlProductService {
       List <ResponseProductDTO> products = productsPage.getContent().stream()
                                                        .map(productMapper::toResponseProductDTO)
                                                        .collect(Collectors.toList());
-
       if (Boolean.TRUE.equals(onlyFavorite)) {
-         List <Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
+         List<Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
          products.removeIf(product -> {
             boolean isFavorite = favoriteProductIds.contains(product.getIdProduct());
             if (isFavorite) {
+               product.setFavorite(true); // Marcar como favorito
+            }
+            return !isFavorite; // Eliminar si no es favorito
+         });
+      } else {
+         // Opcional: Marcar favoritos aunque no se esté filtrando solo favoritos
+         List <Long> favoriteProductIds = userFavoriteProductRepository.findFavoriteProductIdsByUserId(Long.parseLong(userId));
+         products.forEach(product -> {
+            if (favoriteProductIds.contains(product.getIdProduct())) {
                product.setFavorite(true);
             }
-            return !isFavorite;
          });
       }
       long totalFilteredProducts = products.size();
